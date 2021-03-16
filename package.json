@@ -1,0 +1,19 @@
+{
+  "name": "yng-yang",
+  "version": "1.0.0",
+  "description": "My term paper project - yng-yang",
+  "main": "webpack.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MichailSenc/yng-yang.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MichailSenc/yng-yang/issues"
+  },
+  "homepage": "https://github.com/MichailSenc/yng-yang#readme"
+}
