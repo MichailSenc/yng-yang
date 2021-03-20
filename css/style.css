@@ -1,0 +1,68 @@
+canvas {
+    display: block;
+    position: absolute;
+    border: 1px solid black;
+    margin-left: auto;
+    margin-right: auto;
+    /* left: 350px;
+    top: 50px;
+    width: 120px; */
+
+}
+
+.background {
+    z-index: 1;
+}
+
+.transparency {
+    opacity: 0.8;
+}
+
+.canvas_coordinates {
+    font-size: 15px;
+    height: 20px;
+}
+
+button {
+    background-color: #4caf50;
+    border: none;
+    color: white;
+    padding: 1px 50px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+}
+
+#input_type_button {
+    min-width: 350px;
+}
+
+.layer1 {
+    position: relative;
+    border: 1px solid black;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.layer1 input[type="number"] {
+    width: 50px;
+}
+
+.layer1 p {
+    margin: 0;
+}
+
+.top_panel {
+    background-color: #f0f8ff;
+    margin-bottom: 20px;
+}
+
+.layer2 {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hidden {
+    display: none;
+}
