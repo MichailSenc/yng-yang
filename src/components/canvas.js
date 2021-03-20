@@ -1,10 +1,50 @@
 // создать полотно, сетку и добавить события для чекбоксов
-
 class SrartPanel {
     constructor(colors, settings) {
-        this.canvas = createCanvas(),
-        this.grid = createGrid(),
-        this.panel = defaultMatrix(settings);
+        const { canvas, grid } = createStartPanel(colors, settings);
+        this._settings = settings;
+        this.canvas = canvas;
+        this.grid = grid;
+        this.panel;
+        this.setDefaultMatrix();
+    }
+
+    // очистить полотно
+    clearCanvas() {
+        this.canvas.getContext("2d").clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.panel = this.setDefaultMatrix(this._settings);
+    }
+
+    // обнулить матрицу панели
+    setDefaultMatrix() {
+        const { width, height, cellSize } = this._settings,
+            iMax = Math.floor(width / cellSize),
+            jMax = Math.floor(height / cellSize),
+            panel = [];
+
+        for (let i = 0; i < iMax; i++) panel[i] = new Array(jMax);
+        this.panel = panel;
+    }
+
+    start() {
+        // Показать/убрать сетку
+        document.querySelector("#grid_checkbox").addEventListener("input", () => {
+            this.grid.classList.toggle("hidden");
+        });
+        // Показать/убрать полото
+        document.querySelector("#canvas_checkbox").addEventListener("input", () => {
+            this.canvas.classList.toggle("hidden");
+        });
+
+        document.querySelector("#clear_button").addEventListener("click", () => this.clearCanvas());
+    }
+
+    set settings(value) {
+        this._settings = value;
+    }
+
+    get settings() {
+        return this._settings;
     }
 }
 
@@ -37,50 +77,10 @@ function createStartPanel(colors, settings) {
         return cnv;
     }
 
-    function canvasCheckboxEvents(canvas, grid) {
-        // Показать/убрать сетку
-        document.querySelector("#grid_checkbox").addEventListener("input", () => {
-            grid.classList.toggle("hidden");
-        });
-
-        // Показать/убрать полото
-        document.querySelector("#canvas_checkbox").addEventListener("input", () => {
-            canvas.classList.toggle("hidden");
-        });
-    }
-
-    const canvas = createCanvas(),
-        grid = createGrid(),
-        panel = defaultMatrix(settings);
-
-    // отчистить полотно
-    document.querySelector("#clear_button").addEventListener("click", () => clearCanvas(canvas, panel, settings));
-
-    canvasCheckboxEvents(canvas, grid);
-
     return {
-        canvas,
-        grid,
-        panel,
+        canvas: createCanvas(),
+        grid: createGrid(),
     };
 }
 
-function clearCanvas(canvas, panel, settings) {
-    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
-    panel = defaultMatrix(settings);
-}
-
-// пустая матрица (чистое поле)
-function defaultMatrix(settings) {
-    const { width, height, cellSize } = settings,
-        iMax = Math.floor(width / cellSize),
-        jMax = Math.floor(height / cellSize),
-        panel = [];
-
-    for (let i = 0; i < iMax; i++) panel[i] = new Array(jMax);
-
-    return panel;
-}
-
-export default createStartPanel;
-export { clearCanvas };
+export default SrartPanel;
