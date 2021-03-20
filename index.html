@@ -1,12 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yin-Yang</title>
-</head>
-<body>
-    
-</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./css/style.css" />
+        <title>Yin-Yang</title>
+    </head>
+    <body>
+        <div class="top_panel">
+            <div class="layer1">
+                <p><b>Ручная установка</b></p>
+                <p><input type="radio" name="radio" value="empty" checked />Пустая</p>
+                <p><input type="radio" name="radio" value="yng" />Инь</p>
+                <p><input type="radio" name="radio" value="yang" />Ян</p>
+            </div>
+            <div class="layer1">
+                <p><b>Рандомная генерация</b></p>
+                <p><input type="number" id="count_alive" value="20"/> - число живых клеток</p>
+                <p><input type="number" id="yin_percent" value="50" /> - процент Инь</p>
+                <p><input type="number" id="yang_percent" value="50" /> - процент Ян</p>
+                <button id="generate_button">Сгенерировать</button>
+            </div>
+            <div class="layer1">
+                <p><input type="checkbox" id="grid_checkbox" checked/>Сетка</p>
+                <p><input type="checkbox" id="canvas_checkbox" checked/>Полотно</p>
+                <button id="clear_button">Очистить полотно</button>
+                <button id="input_type_button">Установка точек по координатам</button>
+            </div>
+        </div>
+        <div class="layer2" id="container">
+            <div class="canvas_coordinates"></div>
+            <!-- Крч. сюда я засуну canvas -->
+        </div>
+        <!-- <canvas></canvas> -->
+    </body>
+    <script src="./app/main.js"></script>
 </html>
