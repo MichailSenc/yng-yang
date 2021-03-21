@@ -1,17 +1,33 @@
 class IngYangGame {
     constructor(startPanel) {
         this.startPanel = startPanel;
-        this.panel = startPanel.panel;
         this.newPanel = startPanel.defaultMatrix();
         this.worldHeight = startPanel.panel.length;
     }
 
+    // выполнить переход
+    nextStep() {
+        this.startPanel.clearCanvas();
+        this.nextGeneration();
+        for (let i = 0; i < this.startPanel.panel.length; i++) {
+            const element = this.startPanel.panel[i];
+            for (let j = 0; j < element.length; j++) {
+                const item = element[j];
+                if (item) {
+                    this.startPanel.settings.cellType = item;
+                    this.startPanel.putCoordinateToCanvas(i, j);
+                }
+            }
+        }
+    }
+
+    // следующие поколение клеток
     nextGeneration() {
         let point;
         for (let i = 0; i < this.worldHeight; i++) {
             for (let j = 0; j < this.worldHeight; j++) {
-                point = this.panel[i][j];
-                let { countYng, conutYang, sum } = countLiveNeighbors(i, j);
+                point = this.startPanel.panel[i][j];
+                let { countYng, conutYang, sum } = this.countLiveNeighbors(i, j);
 
                 if (!point) {
                     if (sum == 3) {
@@ -33,6 +49,8 @@ class IngYangGame {
                 }
             }
         }
+        this.startPanel.panel = this.newPanel;
+        this.newPanel = this.startPanel.defaultMatrix();
     }
 
     //  координаты соседей точки - окрестность мура 1 порядка
@@ -52,30 +70,31 @@ class IngYangGame {
         let countYng = 0,
             conutYang = 0,
             sum = 0,
-            neighbors = pointNeighbors(x, y);
+            neighbors = this.pointNeighbors(x, y);
 
-        neighbors.forEach((item) => {
+        for (const item of neighbors) {
             let [_x, _y] = item;
             if (_x < 0 || _y < 0) continue;
-            if (_x > this.worldHeight || _y > this.worldHeight) continue;
-            if (this.panel[_x][_y]) {
-                if (this.panel[_x][_y] == "yng") {
+            if (_x > this.worldHeight - 1 || _y > this.worldHeight - 1) continue;
+            if (this.startPanel.panel[_x][_y]) {
+                if (this.startPanel.panel[_x][_y] == "yng") {
                     countYng++;
                 } else {
                     conutYang++;
                 }
                 sum++;
             }
-        });
+        }
         return { countYng, conutYang, sum };
     }
 
     // количество живых клеток на поле
     getLiveCount() {
         let count = 0;
-        this.panel.forEach((arr) => {
+        this.startPanel.panel.forEach((arr) => {
             arr.forEach((item) => item && count++);
         });
+        return count;
     }
 }
 

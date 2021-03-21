@@ -47,6 +47,7 @@ function pointsGeneration(startPanel, colors) {
             startPanel.setDefaultMatrix();
 
             // ставим новые точки
+            let prevCellType = startPanel.settings.cellType;
             startPanel.settings.cellType = "yng";
             for (let i = 0; i < countYng; i++) {
                 let [x, y] = emptyPoints.pop().map((item) => item * cellSize);
@@ -57,6 +58,7 @@ function pointsGeneration(startPanel, colors) {
                 let [x, y] = emptyPoints.pop().map((item) => item * cellSize);
                 startPanel.putCoordinate({ x, y });
             }
+            startPanel.settings.cellType = prevCellType;
         });
     }
 

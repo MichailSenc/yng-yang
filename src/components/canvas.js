@@ -13,7 +13,6 @@ class SrartPanel {
     // очистить полотно
     clearCanvas() {
         this.canvas.getContext("2d").clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.panel = this.setDefaultMatrix(this._settings);
     }
 
     // обнулить матрицу панели
@@ -27,9 +26,16 @@ class SrartPanel {
             iMax = Math.floor(width / cellSize),
             jMax = Math.floor(height / cellSize),
             panel = [];
-    
+
         for (let i = 0; i < iMax; i++) panel[i] = new Array(jMax);
         return panel;
+    }
+
+    putCoordinateToCanvas(x, y) {
+        const { cellSize, cellType } = this._settings,
+            ctx = this.canvas.getContext("2d");
+        ctx.fillStyle = this._colors[`${cellType}`];
+        ctx.fillRect(x * cellSize, y* cellSize, cellSize, cellSize);
     }
 
     putCoordinate({ x, y }) {
@@ -40,7 +46,7 @@ class SrartPanel {
         ctx.fillRect(x, y, cellSize, cellSize);
     }
 
-    start() {
+    setEventListeners() {
         // Показать/убрать сетку
         document.querySelector("#grid_checkbox").addEventListener("input", () => {
             this.grid.classList.toggle("hidden");

@@ -1,2 +1,520 @@
-(()=>{"use strict";const t=function(t,e){const n=t.canvas;n.getContext("2d");let{width:i,height:a,cellSize:s}=t.settings;!function(){const e=document.querySelector("#yin_percent"),n=document.querySelector("#yang_percent"),l=document.querySelector("#count_alive"),o=document.querySelector("#generate_button");function r(t,e){let n=+e.value>100?100:+e.value<0?0:+e.value;e.value=n,t.value=100-n}n.addEventListener("input",(()=>r(e,n))),e.addEventListener("input",(()=>r(n,e))),l.addEventListener("input",(()=>{let t=Math.floor((i-1)/s)*Math.floor((a-1)/s),e=+l.value;l.value=e<0?0:e>t?t:+l.value})),o.addEventListener("click",(()=>{if(!l.value||!e.value||!n.value)return void console.log("null check failed!!!");let o=Math.round(+l.value*+e.value/100),r=+l.value-o,c=Math.floor((i-1)/s)*s,d=Math.floor((a-1)/s)*s;const u=new class{constructor(t,e){this.points=[];for(let n=0;n<t;n++)for(let t=0;t<e;t++)this.points.push([n,t])}shuffle(){let t,e,n=this.points;for(let i=n.length-1;i>0;i--)t=Math.floor(Math.random()*(i+1)),e=n[t],n[t]=n[i],n[i]=e;return this.points}}(c/s,d/s).shuffle();t.clearCanvas(),t.setDefaultMatrix(),t.settings.cellType="yng";for(let e=0;e<o;e++){let[e,n]=u.pop().map((t=>t*s));t.putCoordinate({x:e,y:n})}t.settings.cellType="yang";for(let e=0;e<r;e++){let[e,n]=u.pop().map((t=>t*s));t.putCoordinate({x:e,y:n})}}))}(),function(){function e(t,e,n){let i=t.getBoundingClientRect();return e-=i.left*(t.width/i.width),n-=i.top*(t.height/i.height),{x:Math.floor(e/s)*s,y:Math.floor(n/s)*s}}document.querySelectorAll('[name="radio"]').forEach((e=>{e.addEventListener("change",(e=>t.settings.cellType=e.target.value))})),n.addEventListener("mousedown",(n=>{t.putCoordinate(e(n.target,n.clientX,n.clientY))}));const i=document.querySelector(".canvas_coordinates");n.addEventListener("mousemove",(t=>{let{x:n,y:a}=e(t.target,t.clientX,t.clientY);i.innerHTML=`X: ${n/s}; Y: ${a/s}`}))}()};document.addEventListener("DOMContentLoaded",(()=>{const e=document.querySelector("#container"),n={cellSize:6,width:6*Math.floor(125)+1,height:6*Math.floor(125)+1,cellType:"empty"},i=new class{constructor(t,e){const{canvas:n,grid:i}=function(t,e){const{width:n,height:i,cellSize:a}=e;return{canvas:function(){const e=document.createElement("canvas");return e.classList.add("background"),e.classList.add("transparency"),e.id="canvas",e.width=n,e.height=i,e.style.backgroundColor=t.empty,e}(),grid:function(){const e=document.createElement("canvas");e.id="grid_canvas",e.width=n,e.height=i;let s=e.getContext("2d");s.strokeStyle=t.grid;let l=e.width-1,o=e.height-1;for(let t=0;t<l;t+=a)s.strokeRect(t,0,.1,o);for(let t=0;t<o;t+=a)s.strokeRect(0,t,l,.1);return e}()}}(t,e);this._settings=e,this._colors=t,this.canvas=n,this.grid=i,this.panel,this.setDefaultMatrix()}clearCanvas(){this.canvas.getContext("2d").clearRect(0,0,this.canvas.width,this.canvas.height),this.panel=this.setDefaultMatrix(this._settings)}setDefaultMatrix(){this.panel=this.defaultMatrix()}defaultMatrix(){const{width:t,height:e,cellSize:n}=this._settings,i=Math.floor(t/n),a=Math.floor(e/n),s=[];for(let t=0;t<i;t++)s[t]=new Array(a);return s}putCoordinate({x:t,y:e}){const{cellSize:n,cellType:i}=this._settings,a=this.canvas.getContext("2d");this.panel[t/n][e/n]="empty"==i?null:i,a.fillStyle=this._colors[`${i}`],a.fillRect(t,e,n,n)}start(){document.querySelector("#grid_checkbox").addEventListener("input",(()=>{this.grid.classList.toggle("hidden")})),document.querySelector("#canvas_checkbox").addEventListener("input",(()=>{this.canvas.classList.toggle("hidden")})),document.querySelector("#clear_button").addEventListener("click",(()=>{this.clearCanvas(),this.setDefaultMatrix()}))}set settings(t){this._settings=t}get settings(){return this._settings}}({empty:"#D3D3D3",yng:"#008000",yang:"#FF0000",grid:"black"},n);i.start(),t(i),e.appendChild(i.canvas),e.appendChild(i.grid)}))})();
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+/******/ 	var __webpack_modules__ = ({
+
+/***/ "./src/components/calc-yin-yang-points.js":
+/*!************************************************!*\
+  !*** ./src/components/calc-yin-yang-points.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+class IngYangGame {
+    constructor(startPanel) {
+        this.startPanel = startPanel;
+        this.newPanel = startPanel.defaultMatrix();
+        this.worldHeight = startPanel.panel.length;
+    }
+
+    // выполнить переход
+    nextStep() {
+        this.startPanel.clearCanvas();
+        this.nextGeneration();
+        for (let i = 0; i < this.startPanel.panel.length; i++) {
+            const element = this.startPanel.panel[i];
+            for (let j = 0; j < element.length; j++) {
+                const item = element[j];
+                if (item) {
+                    this.startPanel.settings.cellType = item;
+                    this.startPanel.putCoordinateToCanvas(i, j);
+                }
+            }
+        }
+    }
+
+    // следующие поколение клеток
+    nextGeneration() {
+        let point;
+        for (let i = 0; i < this.worldHeight; i++) {
+            for (let j = 0; j < this.worldHeight; j++) {
+                point = this.startPanel.panel[i][j];
+                let { countYng, conutYang, sum } = this.countLiveNeighbors(i, j);
+
+                if (!point) {
+                    if (sum == 3) {
+                        this.newPanel[i][j] = countYng == 1 ? "yng" : "yang";
+                    }
+                } else {
+                    if (sum > 4 || sum < 2) {
+                        this.newPanel[i][j] = null;
+                        continue;
+                    }
+                    if (point == "yng" && conutYang == 4) {
+                        this.newPanel[i][j] = null;
+                        continue;
+                    }
+                    if (point == "yang" && countYng == 4) {
+                        this.newPanel[i][j] = null;
+                        continue;
+                    }
+                }
+            }
+        }
+        this.startPanel.panel = this.newPanel;
+        this.newPanel = this.startPanel.defaultMatrix();
+    }
+
+    //  координаты соседей точки - окрестность мура 1 порядка
+    pointNeighbors(x, y) {
+        const neighbors = [];
+        for (let i = x - 1; i <= x + 1; i++) {
+            for (let j = y - 1; j <= y + 1; j++) {
+                if (i == x && j == y) continue;
+                neighbors.push([i, j]);
+            }
+        }
+        return neighbors;
+    }
+
+    // количество живых соседей у клетки (x,y)
+    countLiveNeighbors(x, y) {
+        let countYng = 0,
+            conutYang = 0,
+            sum = 0,
+            neighbors = this.pointNeighbors(x, y);
+
+        for (const item of neighbors) {
+            let [_x, _y] = item;
+            if (_x < 0 || _y < 0) continue;
+            if (_x > this.worldHeight - 1 || _y > this.worldHeight - 1) continue;
+            if (this.startPanel.panel[_x][_y]) {
+                if (this.startPanel.panel[_x][_y] == "yng") {
+                    countYng++;
+                } else {
+                    conutYang++;
+                }
+                sum++;
+            }
+        }
+        return { countYng, conutYang, sum };
+    }
+
+    // количество живых клеток на поле
+    getLiveCount() {
+        let count = 0;
+        this.startPanel.panel.forEach((arr) => {
+            arr.forEach((item) => item && count++);
+        });
+        return count;
+    }
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (IngYangGame);
+
+
+/***/ }),
+
+/***/ "./src/components/canvas.js":
+/*!**********************************!*\
+  !*** ./src/components/canvas.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+// создать полотно, сетку и добавить события для чекбоксов
+class SrartPanel {
+    constructor(colors, settings) {
+        const { canvas, grid } = createStartPanel(colors, settings);
+        this._settings = settings;
+        this._colors = colors;
+        this.canvas = canvas;
+        this.grid = grid;
+        this.panel;
+        this.setDefaultMatrix();
+    }
+
+    // очистить полотно
+    clearCanvas() {
+        this.canvas.getContext("2d").clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    // обнулить матрицу панели
+    setDefaultMatrix() {
+        this.panel = this.defaultMatrix();
+    }
+
+    // создать пустую матрицу поля
+    defaultMatrix() {
+        const { width, height, cellSize } = this._settings,
+            iMax = Math.floor(width / cellSize),
+            jMax = Math.floor(height / cellSize),
+            panel = [];
+
+        for (let i = 0; i < iMax; i++) panel[i] = new Array(jMax);
+        return panel;
+    }
+
+    putCoordinateToCanvas(x, y) {
+        const { cellSize, cellType } = this._settings,
+            ctx = this.canvas.getContext("2d");
+        ctx.fillStyle = this._colors[`${cellType}`];
+        ctx.fillRect(x * cellSize, y* cellSize, cellSize, cellSize);
+    }
+
+    putCoordinate({ x, y }) {
+        const { cellSize, cellType } = this._settings,
+            ctx = this.canvas.getContext("2d");
+        this.panel[x / cellSize][y / cellSize] = cellType == "empty" ? null : cellType;
+        ctx.fillStyle = this._colors[`${cellType}`];
+        ctx.fillRect(x, y, cellSize, cellSize);
+    }
+
+    setEventListeners() {
+        // Показать/убрать сетку
+        document.querySelector("#grid_checkbox").addEventListener("input", () => {
+            this.grid.classList.toggle("hidden");
+        });
+        // Показать/убрать полото
+        document.querySelector("#canvas_checkbox").addEventListener("input", () => {
+            this.canvas.classList.toggle("hidden");
+        });
+
+        document.querySelector("#clear_button").addEventListener("click", () => {
+            this.clearCanvas();
+            this.setDefaultMatrix();
+        });
+    }
+
+    set settings(value) {
+        this._settings = value;
+    }
+
+    get settings() {
+        return this._settings;
+    }
+}
+
+function createStartPanel(colors, settings) {
+    const { width, height, cellSize } = settings;
+    // сетка canvas
+    function createGrid() {
+        const cnv = document.createElement("canvas");
+        cnv.id = "grid_canvas";
+        cnv.width = width;
+        cnv.height = height;
+        let ctx = cnv.getContext("2d");
+        ctx.strokeStyle = colors.grid;
+        let w = cnv.width - 1;
+        let h = cnv.height - 1;
+        for (let x = 0; x < w; x += cellSize) ctx.strokeRect(x, 0, 0.1, h);
+        for (let y = 0; y < h; y += cellSize) ctx.strokeRect(0, y, w, 0.1);
+        return cnv;
+    }
+
+    // основное полотно
+    function createCanvas() {
+        const cnv = document.createElement("canvas");
+        cnv.classList.add("background");
+        cnv.classList.add("transparency");
+        cnv.id = "canvas";
+        cnv.width = width;
+        cnv.height = height;
+        cnv.style.backgroundColor = colors.empty;
+        return cnv;
+    }
+
+    return {
+        canvas: createCanvas(),
+        grid: createGrid(),
+    };
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SrartPanel);
+
+
+/***/ }),
+
+/***/ "./src/components/empty-points.js":
+/*!****************************************!*\
+  !*** ./src/components/empty-points.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+class EmptyPoints {
+    constructor(sizeX, sizeY) {
+        this.points = [];
+        for (let i = 0; i < sizeX; i++) {
+            for (let j = 0; j < sizeY; j++) {
+                this.points.push([i, j]);
+            }
+        }
+    }
+
+    // случайнное перемешиване массива - алгоритм Фишера-Йетса 
+    shuffle(){
+        let arr = this.points;
+        let j, temp;
+        for(let i = arr.length - 1; i > 0; i--){
+            j = Math.floor(Math.random()*(i + 1));
+            temp = arr[j];
+            arr[j] = arr[i];
+            arr[i] = temp;
+        }
+        return this.points;
+    }
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EmptyPoints);
+
+
+/***/ }),
+
+/***/ "./src/components/points-generation.js":
+/*!*********************************************!*\
+  !*** ./src/components/points-generation.js ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _empty_points__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./empty-points */ "./src/components/empty-points.js");
+
+
+function pointsGeneration(startPanel, colors) {
+    const canvas = startPanel.canvas,
+        ctx = canvas.getContext("2d");
+    let { width, height, cellSize } = startPanel.settings;
+
+    /* -----------------------Рандомная генерация-------------------------------------------------*/
+    function randomGeneration() {
+        const percentYin = document.querySelector("#yin_percent"),
+            percentYang = document.querySelector("#yang_percent"),
+            countAlive = document.querySelector("#count_alive"),
+            generButton = document.querySelector("#generate_button");
+
+        function changePercent(param1, param2) {
+            let value = +param2.value > 100 ? 100 : +param2.value < 0 ? 0 : +param2.value;
+            param2.value = value;
+            param1.value = 100 - value;
+        }
+
+        // input-ы в рандомной генерации
+        percentYang.addEventListener("input", () => changePercent(percentYin, percentYang));
+        percentYin.addEventListener("input", () => changePercent(percentYang, percentYin));
+        countAlive.addEventListener("input", () => {
+            let maxValue = Math.floor((width - 1) / cellSize) * Math.floor((height - 1) / cellSize),
+                curValue = +countAlive.value;
+            countAlive.value = curValue < 0 ? 0 : curValue > maxValue ? maxValue : +countAlive.value;
+        });
+
+        // кнопка генерации точек на полотне
+        generButton.addEventListener("click", () => {
+            if (!countAlive.value || !percentYin.value || !percentYang.value) {
+                console.log("null check failed!!!");
+                return;
+            }
+
+            let countYng = Math.round((+countAlive.value * +percentYin.value) / 100),
+                countYang = +countAlive.value - countYng,
+                maxSizeX = Math.floor((width - 1) / cellSize) * cellSize,
+                maxSizeY = Math.floor((height - 1) / cellSize) * cellSize;
+
+            // Сгенерировать масив рандомно перемешанных точек на плоскости
+            const emptyPoints = new _empty_points__WEBPACK_IMPORTED_MODULE_0__.default(maxSizeX / cellSize, maxSizeY / cellSize).shuffle();
+
+            // очищаем полотно
+            startPanel.clearCanvas();
+            startPanel.setDefaultMatrix();
+
+            // ставим новые точки
+            let prevCellType = startPanel.settings.cellType;
+            startPanel.settings.cellType = "yng";
+            for (let i = 0; i < countYng; i++) {
+                let [x, y] = emptyPoints.pop().map((item) => item * cellSize);
+                startPanel.putCoordinate({ x, y });
+            }
+            startPanel.settings.cellType = "yang";
+            for (let i = 0; i < countYang; i++) {
+                let [x, y] = emptyPoints.pop().map((item) => item * cellSize);
+                startPanel.putCoordinate({ x, y });
+            }
+            startPanel.settings.cellType = prevCellType;
+        });
+    }
+
+    /* -----------------------Пользовательская генерация------------------------------------------*/
+    function customGeneration() {
+        const radio = document.querySelectorAll('[name="radio"]');
+
+        radio.forEach((item) => {
+            item.addEventListener("change", (event) => (startPanel.settings.cellType = event.target.value));
+        });
+
+        // Координаты canvas относительно Window
+        function windowToCanvas(canvas, x, y) {
+            let bbox = canvas.getBoundingClientRect();
+            x -= bbox.left * (canvas.width / bbox.width);
+            y -= bbox.top * (canvas.height / bbox.height);
+            return {
+                x: Math.floor(x / cellSize) * cellSize,
+                y: Math.floor(y / cellSize) * cellSize,
+            };
+        }
+
+        canvas.addEventListener("mousedown", (e) => {
+            startPanel.putCoordinate(windowToCanvas(e.target, e.clientX, e.clientY));
+        });
+
+        const canvasCoordinates = document.querySelector(".canvas_coordinates");
+        canvas.addEventListener("mousemove", (e) => {
+            let { x, y } = windowToCanvas(e.target, e.clientX, e.clientY);
+            canvasCoordinates.innerHTML = `X: ${x / cellSize}; Y: ${y / cellSize}`;
+        });
+    }
+    /* -------------------------------------------------------------------------------------------*/
+
+    randomGeneration();
+    customGeneration();
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (pointsGeneration);
+
+
+/***/ })
+
+/******/ 	});
+/************************************************************************/
+/******/ 	// The module cache
+/******/ 	var __webpack_module_cache__ = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(__webpack_module_cache__[moduleId]) {
+/******/ 			return __webpack_module_cache__[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
+/******/ 			// no module.id needed
+/******/ 			// no module.loaded needed
+/******/ 			exports: {}
+/******/ 		};
+/******/ 	
+/******/ 		// Execute the module function
+/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/************************************************************************/
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+/*!**********************!*\
+  !*** ./src/index.js ***!
+  \**********************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _components_points_generation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/points-generation */ "./src/components/points-generation.js");
+/* harmony import */ var _components_canvas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/canvas */ "./src/components/canvas.js");
+/* harmony import */ var _components_calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/calc-yin-yang-points */ "./src/components/calc-yin-yang-points.js");
+// import "materialize-css";
+
+
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const container = document.querySelector("#container");
+    /* -------------------------------НАСТРОЙКИ---------------------------------------------------------------------- */
+    const cell = 1;
+    const settings = {
+        cellSize: cell,
+        width: Math.floor(750 / cell) * cell + 1,
+        height: Math.floor(750 / cell) * cell + 1,
+        cellType: "empty",
+    };
+
+    const colors = { empty: "#D3D3D3", yng: "#008000", yang: "#FF0000", grid: "black" };
+
+    /* -------------------------------ОТРИСОВКА_ПОЛОТНА-------------------------------------------------------------- */
+    const startPanel = new _components_canvas__WEBPACK_IMPORTED_MODULE_1__.default(colors, settings);
+
+    startPanel.setEventListeners();
+
+    (0,_components_points_generation__WEBPACK_IMPORTED_MODULE_0__.default)(startPanel);
+
+    container.appendChild(startPanel.canvas);
+    container.appendChild(startPanel.grid);
+
+    /* -------------------------------НАЧАЛО_ИГРЫ-------------------------------------------------------------------- */
+    const startButton = document.querySelector("#start_button"),
+        stepCount = document.querySelector(".step_count");
+    let isStarted = false,
+        curStep,
+        interval;
+
+    let game;
+
+    startButton.addEventListener("click", () => {
+        isStarted = true;
+        curStep = 0;
+        game = new _components_calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_2__.default(startPanel);
+        interval = setInterval(() => start(), 1000);
+    });
+
+    function start() {
+        curStep++;
+        game.nextStep();
+        if (game.getLiveCount() == 0) {
+            clearInterval(interval);
+            isStarted = false;
+        }
+        stepCount.innerHTML = `Step: ${curStep}`;
+    }
+});
+
+})();
+
+/******/ })()
+;
 //# sourceMappingURL=main.js.map

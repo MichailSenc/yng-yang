@@ -1,28 +1,54 @@
 // import "materialize-css";
 import pointsGeneration from "./components/points-generation";
 import SrartPanel from "./components/canvas";
+import IngYangGame from "./components/calc-yin-yang-points";
 
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector("#container");
-    const cell = 6;
+    /* -------------------------------НАСТРОЙКИ---------------------------------------------------------------------- */
+    const cell = 1;
     const settings = {
         cellSize: cell,
-        width: Math.floor(750/cell) * cell + 1,
-        height: Math.floor(750/cell) * cell + 1, 
+        width: Math.floor(750 / cell) * cell + 1,
+        height: Math.floor(750 / cell) * cell + 1,
         cellType: "empty",
     };
 
-    // console.log(settings);
-
     const colors = { empty: "#D3D3D3", yng: "#008000", yang: "#FF0000", grid: "black" };
+
+    /* -------------------------------ОТРИСОВКА_ПОЛОТНА-------------------------------------------------------------- */
     const startPanel = new SrartPanel(colors, settings);
 
-    startPanel.start();
+    startPanel.setEventListeners();
 
     pointsGeneration(startPanel);
 
     container.appendChild(startPanel.canvas);
     container.appendChild(startPanel.grid);
 
-    function start(params) {}
+    /* -------------------------------НАЧАЛО_ИГРЫ-------------------------------------------------------------------- */
+    const startButton = document.querySelector("#start_button"),
+        stepCount = document.querySelector(".step_count");
+    let isStarted = false,
+        curStep,
+        interval;
+
+    let game;
+
+    startButton.addEventListener("click", () => {
+        isStarted = true;
+        curStep = 0;
+        game = new IngYangGame(startPanel);
+        interval = setInterval(() => start(), 1000);
+    });
+
+    function start() {
+        curStep++;
+        game.nextStep();
+        if (game.getLiveCount() == 0) {
+            clearInterval(interval);
+            isStarted = false;
+        }
+        stepCount.innerHTML = `Step: ${curStep}`;
+    }
 });

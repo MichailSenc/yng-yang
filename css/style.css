@@ -7,7 +7,6 @@ canvas {
     /* left: 350px;
     top: 50px;
     width: 120px; */
-
 }
 
 .background {
@@ -19,8 +18,18 @@ canvas {
 }
 
 .canvas_coordinates {
+    display: inline-block;
     font-size: 15px;
     height: 20px;
+    width: 100px;
+}
+
+.step_count {
+    display: inline-block;
+    font-size: 15px;
+    height: 20px;
+    width: 100px;
+    /* text-align: right; */
 }
 
 button {
@@ -32,21 +41,26 @@ button {
     text-decoration: none;
     display: block;
     font-size: 16px;
+    /* position: relative; */
 }
 
-#input_type_button {
-    min-width: 350px;
+#start_button {
+    height: 30px;
+    position: relative;
+    top: auto;
 }
 
 .layer1 {
+    /* min-width: 200px; */
     position: relative;
     border: 1px solid black;
     display: inline-block;
     vertical-align: top;
+    height: 100px;
 }
 
 .layer1 input[type="number"] {
-    width: 50px;
+    width: 80px;
 }
 
 .layer1 p {
