@@ -1,7 +1,6 @@
-// import "materialize-css";
-import pointsGeneration from "./components/points-generation";
-import SrartPanel from "./components/canvas";
-import IngYangGame from "./components/calc-yin-yang-points";
+import pointsGeneration from "./modules/points-generation";
+import SrartPanel from "./modules/canvas";
+import IngYangGame from "./modules/calc-yin-yang-points";
 
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector("#container");

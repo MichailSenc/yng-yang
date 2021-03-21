@@ -2,10 +2,10 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/components/calc-yin-yang-points.js":
-/*!************************************************!*\
-  !*** ./src/components/calc-yin-yang-points.js ***!
-  \************************************************/
+/***/ "./js/modules/calc-yin-yang-points.js":
+/*!********************************************!*\
+  !*** ./js/modules/calc-yin-yang-points.js ***!
+  \********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -117,10 +117,10 @@ class IngYangGame {
 
 /***/ }),
 
-/***/ "./src/components/canvas.js":
-/*!**********************************!*\
-  !*** ./src/components/canvas.js ***!
-  \**********************************/
+/***/ "./js/modules/canvas.js":
+/*!******************************!*\
+  !*** ./js/modules/canvas.js ***!
+  \******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -240,10 +240,10 @@ function createStartPanel(colors, settings) {
 
 /***/ }),
 
-/***/ "./src/components/empty-points.js":
-/*!****************************************!*\
-  !*** ./src/components/empty-points.js ***!
-  \****************************************/
+/***/ "./js/modules/empty-points.js":
+/*!************************************!*\
+  !*** ./js/modules/empty-points.js ***!
+  \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -279,17 +279,17 @@ class EmptyPoints {
 
 /***/ }),
 
-/***/ "./src/components/points-generation.js":
-/*!*********************************************!*\
-  !*** ./src/components/points-generation.js ***!
-  \*********************************************/
+/***/ "./js/modules/points-generation.js":
+/*!*****************************************!*\
+  !*** ./js/modules/points-generation.js ***!
+  \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _empty_points__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./empty-points */ "./src/components/empty-points.js");
+/* harmony import */ var _empty_points__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./empty-points */ "./js/modules/empty-points.js");
 
 
 function pointsGeneration(startPanel, colors) {
@@ -451,14 +451,13 @@ function pointsGeneration(startPanel, colors) {
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-/*!**********************!*\
-  !*** ./src/index.js ***!
-  \**********************/
+/*!*********************!*\
+  !*** ./js/index.js ***!
+  \*********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_points_generation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/points-generation */ "./src/components/points-generation.js");
-/* harmony import */ var _components_canvas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/canvas */ "./src/components/canvas.js");
-/* harmony import */ var _components_calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/calc-yin-yang-points */ "./src/components/calc-yin-yang-points.js");
-// import "materialize-css";
+/* harmony import */ var _modules_points_generation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/points-generation */ "./js/modules/points-generation.js");
+/* harmony import */ var _modules_canvas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/canvas */ "./js/modules/canvas.js");
+/* harmony import */ var _modules_calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/calc-yin-yang-points */ "./js/modules/calc-yin-yang-points.js");
 
 
 
@@ -477,11 +476,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const colors = { empty: "#D3D3D3", yng: "#008000", yang: "#FF0000", grid: "black" };
 
     /* -------------------------------ОТРИСОВКА_ПОЛОТНА-------------------------------------------------------------- */
-    const startPanel = new _components_canvas__WEBPACK_IMPORTED_MODULE_1__.default(colors, settings);
+    const startPanel = new _modules_canvas__WEBPACK_IMPORTED_MODULE_1__.default(colors, settings);
 
     startPanel.setEventListeners();
 
-    (0,_components_points_generation__WEBPACK_IMPORTED_MODULE_0__.default)(startPanel);
+    (0,_modules_points_generation__WEBPACK_IMPORTED_MODULE_0__.default)(startPanel);
 
     container.appendChild(startPanel.canvas);
     container.appendChild(startPanel.grid);
@@ -498,7 +497,7 @@ document.addEventListener("DOMContentLoaded", () => {
     startButton.addEventListener("click", () => {
         isStarted = true;
         curStep = 0;
-        game = new _components_calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_2__.default(startPanel);
+        game = new _modules_calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_2__.default(startPanel);
         interval = setInterval(() => start(), 1000);
     });
 

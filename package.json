@@ -16,7 +16,5 @@
     "url": "https://github.com/MichailSenc/yng-yang/issues"
   },
   "homepage": "https://github.com/MichailSenc/yng-yang#readme",
-  "dependencies": {
-    "materialize-css": "^1.0.0-rc.2"
-  }
+  "dependencies": {}
 }
