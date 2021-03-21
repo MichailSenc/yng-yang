@@ -3,6 +3,7 @@ class SrartPanel {
     constructor(colors, settings) {
         const { canvas, grid } = createStartPanel(colors, settings);
         this._settings = settings;
+        this._colors = colors;
         this.canvas = canvas;
         this.grid = grid;
         this.panel;
@@ -17,13 +18,26 @@ class SrartPanel {
 
     // обнулить матрицу панели
     setDefaultMatrix() {
+        this.panel = this.defaultMatrix();
+    }
+
+    // создать пустую матрицу поля
+    defaultMatrix() {
         const { width, height, cellSize } = this._settings,
             iMax = Math.floor(width / cellSize),
             jMax = Math.floor(height / cellSize),
             panel = [];
-
+    
         for (let i = 0; i < iMax; i++) panel[i] = new Array(jMax);
-        this.panel = panel;
+        return panel;
+    }
+
+    putCoordinate({ x, y }) {
+        const { cellSize, cellType } = this._settings,
+            ctx = this.canvas.getContext("2d");
+        this.panel[x / cellSize][y / cellSize] = cellType == "empty" ? null : cellType;
+        ctx.fillStyle = this._colors[`${cellType}`];
+        ctx.fillRect(x, y, cellSize, cellSize);
     }
 
     start() {
@@ -36,7 +50,10 @@ class SrartPanel {
             this.canvas.classList.toggle("hidden");
         });
 
-        document.querySelector("#clear_button").addEventListener("click", () => this.clearCanvas());
+        document.querySelector("#clear_button").addEventListener("click", () => {
+            this.clearCanvas();
+            this.setDefaultMatrix();
+        });
     }
 
     set settings(value) {
