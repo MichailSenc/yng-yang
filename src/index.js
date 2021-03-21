@@ -1,19 +1,28 @@
 // import "materialize-css";
 import pointsGeneration from "./components/points-generation";
-import createStartPanel from "./components/canvas";
+import SrartPanel from "./components/canvas";
 
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector("#container");
-    const settings = { width: 750, height: 750, cellSize: 7, cellType: "empty" };
+    const cell = 6;
+    const settings = {
+        cellSize: cell,
+        width: Math.floor(750/cell) * cell + 1,
+        height: Math.floor(750/cell) * cell + 1, 
+        cellType: "empty",
+    };
+
+    // console.log(settings);
+
     const colors = { empty: "#D3D3D3", yng: "#008000", yang: "#FF0000", grid: "black" };
-    const { canvas, grid, panel } = createStartPanel(colors, settings);
+    const startPanel = new SrartPanel(colors, settings);
 
-    pointsGeneration(panel, canvas, settings, colors);
+    startPanel.start();
 
-    // document.querySelector("#generate_button").addEventListener("click", () => console.log(panel));
+    pointsGeneration(startPanel);
 
-    container.appendChild(canvas);
-    container.appendChild(grid);
+    container.appendChild(startPanel.canvas);
+    container.appendChild(startPanel.grid);
 
     function start(params) {}
 });
