@@ -31,20 +31,21 @@ class IngYangGame {
 
                 if (!point) {
                     if (sum == 3) {
-                        this.newPanel[i][j] = countYng == 1 ? "yng" : "yang";
+                        if (countYng == 1) {
+                            this.newPanel[i][j] = "yng";
+                        } else if (conutYang == 1) {
+                            this.newPanel[i][j] = "yang";
+                        }
                     }
                 } else {
                     if (sum > 4 || sum < 2) {
                         this.newPanel[i][j] = null;
-                        continue;
-                    }
-                    if (point == "yng" && conutYang == 4) {
+                    } else if (point == "yng" && conutYang == 4) {
                         this.newPanel[i][j] = null;
-                        continue;
-                    }
-                    if (point == "yang" && countYng == 4) {
+                    } else if (point == "yang" && countYng == 4) {
                         this.newPanel[i][j] = null;
-                        continue;
+                    } else {
+                        this.newPanel[i][j] = point;
                     }
                 }
             }

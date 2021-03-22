@@ -45,20 +45,21 @@ class IngYangGame {
 
                 if (!point) {
                     if (sum == 3) {
-                        this.newPanel[i][j] = countYng == 1 ? "yng" : "yang";
+                        if (countYng == 1) {
+                            this.newPanel[i][j] = "yng";
+                        } else if (conutYang == 1) {
+                            this.newPanel[i][j] = "yang";
+                        }
                     }
                 } else {
                     if (sum > 4 || sum < 2) {
                         this.newPanel[i][j] = null;
-                        continue;
-                    }
-                    if (point == "yng" && conutYang == 4) {
+                    } else if (point == "yng" && conutYang == 4) {
                         this.newPanel[i][j] = null;
-                        continue;
-                    }
-                    if (point == "yang" && countYng == 4) {
+                    } else if (point == "yang" && countYng == 4) {
                         this.newPanel[i][j] = null;
-                        continue;
+                    } else {
+                        this.newPanel[i][j] = point;
                     }
                 }
             }
@@ -526,7 +527,7 @@ __webpack_require__.r(__webpack_exports__);
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector("#container");
     /* -------------------------------НАСТРОЙКИ---------------------------------------------------------------------- */
-    const cell = 7;
+    const cell = 5;
     const settings = {
         cellSize: cell,
         width: Math.floor(750 / cell) * cell + 1,
@@ -534,7 +535,8 @@ document.addEventListener("DOMContentLoaded", () => {
         cellType: "empty",
     };
 
-    const colors = { empty: "#D3D3D3", yng: "#008000", yang: "#FF0000", grid: "black" };
+    const colors = { empty: "#FFFFFF", yng: "#000000", yang: "#FF0000", grid: "black" };
+    // const colors = { empty: "#D3D3D3", yng: "#008000", yang: "#FF0000", grid: "black" };
 
     (0,_modules_local_storage__WEBPACK_IMPORTED_MODULE_3__.getDataFromLocalStorage)();
     (0,_modules_local_storage__WEBPACK_IMPORTED_MODULE_3__.postDataToLocalStorage)();
@@ -551,7 +553,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* -------------------------------НАЧАЛО_ИГРЫ-------------------------------------------------------------------- */
     const startButton = document.querySelector("#start_button"),
+        dItems = document.querySelectorAll("[data-disalbe]"),
         stepCount = document.querySelector(".step_count");
+
+    function disable() {
+        for (const item of dItems) {
+            item.classList.add(".disabled");
+            item.disabled = true;
+        }
+    }
+
+    function allow() {
+        for (const item of dItems) {
+            item.classList.remove(".disabled");
+            item.disabled = false;
+        }
+    }
+
     let isStarted = false,
         curStep,
         interval;
@@ -559,10 +577,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let game;
 
     startButton.addEventListener("click", () => {
+        // disable();
         isStarted = true;
         curStep = 0;
         game = new _modules_calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_2__.default(startPanel);
-        interval = setInterval(() => start(), 100);
+        interval = setInterval(() => start(), 10);
     });
 
     function start() {
@@ -570,6 +589,7 @@ document.addEventListener("DOMContentLoaded", () => {
         game.nextStep();
         if (game.getLiveCount() == 0) {
             clearInterval(interval);
+            // allow();
             isStarted = false;
         }
         stepCount.innerHTML = `Step: ${curStep}`;

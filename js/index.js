@@ -6,7 +6,7 @@ import { getDataFromLocalStorage, postDataToLocalStorage } from "./modules/local
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector("#container");
     /* -------------------------------НАСТРОЙКИ---------------------------------------------------------------------- */
-    const cell = 7;
+    const cell = 5;
     const settings = {
         cellSize: cell,
         width: Math.floor(750 / cell) * cell + 1,
@@ -14,7 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
         cellType: "empty",
     };
 
-    const colors = { empty: "#D3D3D3", yng: "#008000", yang: "#FF0000", grid: "black" };
+    const colors = { empty: "#FFFFFF", yng: "#000000", yang: "#FF0000", grid: "black" };
+    // const colors = { empty: "#D3D3D3", yng: "#008000", yang: "#FF0000", grid: "black" };
 
     getDataFromLocalStorage();
     postDataToLocalStorage();
@@ -31,7 +32,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* -------------------------------НАЧАЛО_ИГРЫ-------------------------------------------------------------------- */
     const startButton = document.querySelector("#start_button"),
+        dItems = document.querySelectorAll("[data-disalbe]"),
         stepCount = document.querySelector(".step_count");
+
+    function disable() {
+        for (const item of dItems) {
+            item.classList.add(".disabled");
+            item.disabled = true;
+        }
+    }
+
+    function allow() {
+        for (const item of dItems) {
+            item.classList.remove(".disabled");
+            item.disabled = false;
+        }
+    }
+
     let isStarted = false,
         curStep,
         interval;
@@ -39,10 +56,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let game;
 
     startButton.addEventListener("click", () => {
+        // disable();
         isStarted = true;
         curStep = 0;
         game = new IngYangGame(startPanel);
-        interval = setInterval(() => start(), 100);
+        interval = setInterval(() => start(), 10);
     });
 
     function start() {
@@ -50,6 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
         game.nextStep();
         if (game.getLiveCount() == 0) {
             clearInterval(interval);
+            // allow();
             isStarted = false;
         }
         stepCount.innerHTML = `Step: ${curStep}`;
