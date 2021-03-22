@@ -1,11 +1,12 @@
 import pointsGeneration from "./modules/points-generation";
 import SrartPanel from "./modules/canvas";
 import IngYangGame from "./modules/calc-yin-yang-points";
+import { getDataFromLocalStorage, postDataToLocalStorage } from "./modules/local-storage";
 
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector("#container");
     /* -------------------------------НАСТРОЙКИ---------------------------------------------------------------------- */
-    const cell = 1;
+    const cell = 7;
     const settings = {
         cellSize: cell,
         width: Math.floor(750 / cell) * cell + 1,
@@ -14,6 +15,9 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const colors = { empty: "#D3D3D3", yng: "#008000", yang: "#FF0000", grid: "black" };
+
+    getDataFromLocalStorage();
+    postDataToLocalStorage();
 
     /* -------------------------------ОТРИСОВКА_ПОЛОТНА-------------------------------------------------------------- */
     const startPanel = new SrartPanel(colors, settings);
@@ -38,7 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
         isStarted = true;
         curStep = 0;
         game = new IngYangGame(startPanel);
-        interval = setInterval(() => start(), 1000);
+        interval = setInterval(() => start(), 100);
     });
 
     function start() {

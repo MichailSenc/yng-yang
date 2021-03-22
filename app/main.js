@@ -164,7 +164,7 @@ class SrartPanel {
         const { cellSize, cellType } = this._settings,
             ctx = this.canvas.getContext("2d");
         ctx.fillStyle = this._colors[`${cellType}`];
-        ctx.fillRect(x * cellSize, y* cellSize, cellSize, cellSize);
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
     }
 
     putCoordinate({ x, y }) {
@@ -177,11 +177,17 @@ class SrartPanel {
 
     setEventListeners() {
         // Показать/убрать сетку
-        document.querySelector("#grid_checkbox").addEventListener("input", () => {
+        const gridCheck = document.querySelector("#grid_checkbox"),
+            canvasCheck = document.querySelector("#canvas_checkbox");
+
+        if (!gridCheck.checked) this.grid.classList.add("hidden");
+        if (!canvasCheck.checked) this.canvas.classList.add("hidden");
+
+        gridCheck.addEventListener("input", () => {
             this.grid.classList.toggle("hidden");
         });
         // Показать/убрать полото
-        document.querySelector("#canvas_checkbox").addEventListener("input", () => {
+        canvasCheck.addEventListener("input", () => {
             this.canvas.classList.toggle("hidden");
         });
 
@@ -275,6 +281,59 @@ class EmptyPoints {
 }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EmptyPoints);
+
+
+/***/ }),
+
+/***/ "./js/modules/local-storage.js":
+/*!*************************************!*\
+  !*** ./js/modules/local-storage.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "getDataFromLocalStorage": () => (/* binding */ getDataFromLocalStorage),
+/* harmony export */   "postDataToLocalStorage": () => (/* binding */ postDataToLocalStorage)
+/* harmony export */ });
+function getAttributes() {
+    return [
+        document.querySelector("#count_alive"),
+        document.querySelector("#yin_percent"),
+        document.querySelector("#yang_percent"),
+        document.querySelector("#grid_checkbox"),
+        document.querySelector("#canvas_checkbox"),
+    ];
+}
+
+function getDataFromLocalStorage() {
+    getAttributes().forEach((item) => {
+        let value = localStorage.getItem(item.getAttribute("id"));
+        if (value) {
+            if (item.getAttribute("type") === "checkbox") {
+                item.checked = value == "true";
+            } else {
+                item.value = value;
+            }
+        }
+    });
+}
+
+function postDataToLocalStorage() {
+    getAttributes().forEach((item) => {
+        if (item.getAttribute("type") === "checkbox") {
+            item.addEventListener("change", () => {
+                localStorage.setItem(item.getAttribute("id"), item.checked);
+            });
+        } else {
+            item.addEventListener("change", () => {
+                localStorage.setItem(item.getAttribute("id"), item.value);
+            });
+        }
+    });
+}
+
+
 
 
 /***/ }),
@@ -458,6 +517,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_points_generation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/points-generation */ "./js/modules/points-generation.js");
 /* harmony import */ var _modules_canvas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/canvas */ "./js/modules/canvas.js");
 /* harmony import */ var _modules_calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/calc-yin-yang-points */ "./js/modules/calc-yin-yang-points.js");
+/* harmony import */ var _modules_local_storage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/local-storage */ "./js/modules/local-storage.js");
+
 
 
 
@@ -465,7 +526,7 @@ __webpack_require__.r(__webpack_exports__);
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector("#container");
     /* -------------------------------НАСТРОЙКИ---------------------------------------------------------------------- */
-    const cell = 1;
+    const cell = 7;
     const settings = {
         cellSize: cell,
         width: Math.floor(750 / cell) * cell + 1,
@@ -474,6 +535,9 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const colors = { empty: "#D3D3D3", yng: "#008000", yang: "#FF0000", grid: "black" };
+
+    (0,_modules_local_storage__WEBPACK_IMPORTED_MODULE_3__.getDataFromLocalStorage)();
+    (0,_modules_local_storage__WEBPACK_IMPORTED_MODULE_3__.postDataToLocalStorage)();
 
     /* -------------------------------ОТРИСОВКА_ПОЛОТНА-------------------------------------------------------------- */
     const startPanel = new _modules_canvas__WEBPACK_IMPORTED_MODULE_1__.default(colors, settings);
@@ -498,7 +562,7 @@ document.addEventListener("DOMContentLoaded", () => {
         isStarted = true;
         curStep = 0;
         game = new _modules_calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_2__.default(startPanel);
-        interval = setInterval(() => start(), 1000);
+        interval = setInterval(() => start(), 100);
     });
 
     function start() {

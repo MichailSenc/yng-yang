@@ -35,7 +35,7 @@ class SrartPanel {
         const { cellSize, cellType } = this._settings,
             ctx = this.canvas.getContext("2d");
         ctx.fillStyle = this._colors[`${cellType}`];
-        ctx.fillRect(x * cellSize, y* cellSize, cellSize, cellSize);
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
     }
 
     putCoordinate({ x, y }) {
@@ -48,11 +48,17 @@ class SrartPanel {
 
     setEventListeners() {
         // Показать/убрать сетку
-        document.querySelector("#grid_checkbox").addEventListener("input", () => {
+        const gridCheck = document.querySelector("#grid_checkbox"),
+            canvasCheck = document.querySelector("#canvas_checkbox");
+
+        if (!gridCheck.checked) this.grid.classList.add("hidden");
+        if (!canvasCheck.checked) this.canvas.classList.add("hidden");
+
+        gridCheck.addEventListener("input", () => {
             this.grid.classList.toggle("hidden");
         });
         // Показать/убрать полото
-        document.querySelector("#canvas_checkbox").addEventListener("input", () => {
+        canvasCheck.addEventListener("input", () => {
             this.canvas.classList.toggle("hidden");
         });
 
