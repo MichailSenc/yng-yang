@@ -3,9 +3,10 @@ class IngYangGame {
         this.startPanel = startPanel;
         this.oldPanels = [];
         this.worldHeight = startPanel.panel.length;
+        this.count = 0;
     }
 
-    // проверка конфигурации на зацикливание 
+    // проверка конфигурации на зацикливание
     checkLoops() {
         for (let i = this.oldPanels.length - 1; i >= 0; i--) {
             if (this.isEqualMatix(this.startPanel.panel, this.oldPanels[i])) {
@@ -81,11 +82,12 @@ class IngYangGame {
                 }
             }
         }
-        // Чтобы комп не взлетел надо сбросить кэш, 
-        // if (this.oldPanels.length > 400) {
-        //     console.log('refresh!');
-        //     this.oldPanels = [];
-        // }
+        // Чтобы комп не взлетел надо сбросить кэш,
+        if (this.oldPanels.length > 150 && this.count < 2) {
+            this.count++;
+            console.log("refresh!");
+            this.oldPanels = [];
+        }
         this.oldPanels.push(this.startPanel.panel);
         this.startPanel.panel = newPanel;
     }

@@ -6,11 +6,11 @@ import { getDataFromLocalStorage, postDataToLocalStorage } from "./modules/local
 document.addEventListener("DOMContentLoaded", () => {
     const container = document.querySelector("#container");
     /* -------------------------------НАСТРОЙКИ---------------------------------------------------------------------- */
-    const cell = 5;
+    const cell = 4;
     const settings = {
         cellSize: cell,
-        width: Math.floor(750 / cell) * cell + 1,
-        height: Math.floor(750 / cell) * cell + 1,
+        width: Math.floor(650 / cell) * cell + 1,
+        height: Math.floor(650 / cell) * cell + 1,
         cellType: "empty",
     };
 
@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const startButton = document.querySelector("#start_button"),
         stopButton = document.querySelector("#stop_button"),
         dItems = document.querySelectorAll("[data-disalbe]"),
+        report = document.querySelector(".report"),
         stepCount = document.querySelector(".step_count");
 
     function disable() {
@@ -64,18 +65,17 @@ document.addEventListener("DOMContentLoaded", () => {
         // disable();
         if (!isStarted) {
             isStarted = true;
+            report.innerText = "";
             curStep = 0;
             game = new IngYangGame(startPanel);
         }
         interval = setInterval(() => start(), 10);
     });
 
-    console.log(stopButton);
-
     function stopInterval(message) {
         clearInterval(interval);
         // allow();
-        stepCount.innerHTML = `${message}`;
+        report.innerText = `${message}`;
         isStarted = false;
     }
 
@@ -91,6 +91,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 На поле не осталось ни одной «живой» клетки, количество шагов: ${curStep}`);
             return;
         }
-        stepCount.innerHTML = `Step: ${curStep}`;
+        stepCount.innerText = `Step: ${curStep}`;
     }
 });
