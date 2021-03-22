@@ -19,16 +19,19 @@ canvas {
 
 .canvas_coordinates {
     display: inline-block;
+    font-weight: bold;
     font-size: 15px;
     height: 20px;
     width: 100px;
 }
 
 .step_count {
+    text-align: right;
     display: inline-block;
     font-size: 15px;
     height: 20px;
-    width: 100px;
+    width: 600px;
+    font-weight: bold;
     /* text-align: right; */
 }
 
@@ -47,6 +50,10 @@ button {
 .disabled {
     opacity: 0.6;
     cursor: not-allowed;
+}
+
+.color_red {
+    color: red; /* Красный цвет выделения */
 }
 
 #start_button {

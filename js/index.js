@@ -15,7 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const colors = { empty: "#FFFFFF", yng: "#000000", yang: "#FF0000", grid: "black" };
-    // const colors = { empty: "#D3D3D3", yng: "#008000", yang: "#FF0000", grid: "black" };
 
     getDataFromLocalStorage();
     postDataToLocalStorage();
@@ -32,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* -------------------------------НАЧАЛО_ИГРЫ-------------------------------------------------------------------- */
     const startButton = document.querySelector("#start_button"),
+        stopButton = document.querySelector("#stop_button"),
         dItems = document.querySelectorAll("[data-disalbe]"),
         stepCount = document.querySelector(".step_count");
 
@@ -55,21 +55,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let game;
 
+    stopButton.addEventListener("click", () => {
+        // console.log(game.oldPanels);
+        clearInterval(interval);
+    });
+
     startButton.addEventListener("click", () => {
         // disable();
-        isStarted = true;
-        curStep = 0;
-        game = new IngYangGame(startPanel);
+        if (!isStarted) {
+            isStarted = true;
+            curStep = 0;
+            game = new IngYangGame(startPanel);
+        }
         interval = setInterval(() => start(), 10);
     });
 
+    console.log(stopButton);
+
+    function stopInterval(message) {
+        clearInterval(interval);
+        // allow();
+        stepCount.innerHTML = `${message}`;
+        isStarted = false;
+    }
+
     function start() {
         curStep++;
-        game.nextStep();
+        let result = game.nextStep();
+        if (result) {
+            stopInterval(`${result.message}. Количество шагов: ${curStep}`);
+            return;
+        }
         if (game.getLiveCount() == 0) {
-            clearInterval(interval);
-            // allow();
-            isStarted = false;
+            stopInterval(`
+                На поле не осталось ни одной «живой» клетки, количество шагов: ${curStep}`);
+            return;
         }
         stepCount.innerHTML = `Step: ${curStep}`;
     }

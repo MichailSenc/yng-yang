@@ -1,8 +1,36 @@
 class IngYangGame {
     constructor(startPanel) {
         this.startPanel = startPanel;
-        this.newPanel = startPanel.defaultMatrix();
+        this.oldPanels = [];
         this.worldHeight = startPanel.panel.length;
+    }
+
+    // проверка конфигурации на зацикливание 
+    checkLoops() {
+        for (let i = this.oldPanels.length - 1; i >= 0; i--) {
+            if (this.isEqualMatix(this.startPanel.panel, this.oldPanels[i])) {
+                return {
+                    count: this.oldPanels.length - i,
+                    message:
+                        this.oldPanels.length - i == 1
+                            ? `Данная конфигурация приняла стабильное состояние`
+                            : `Зацикливание. Конфигурация повторилась на ${this.oldPanels.length - i} шаге цикла`,
+                };
+            }
+        }
+        return false;
+    }
+
+    // сравнивание двух матриц
+    isEqualMatix(matrix1, matrix2) {
+        for (let i = 0; i < this.worldHeight; i++) {
+            for (let j = 0; j < this.worldHeight; j++) {
+                if (matrix1[i][j] != matrix2[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     // выполнить переход
@@ -19,11 +47,13 @@ class IngYangGame {
                 }
             }
         }
+        return this.checkLoops();
     }
 
     // следующие поколение клеток
     nextGeneration() {
         let point;
+        const newPanel = this.startPanel.defaultMatrix();
         for (let i = 0; i < this.worldHeight; i++) {
             for (let j = 0; j < this.worldHeight; j++) {
                 point = this.startPanel.panel[i][j];
@@ -32,26 +62,32 @@ class IngYangGame {
                 if (!point) {
                     if (sum == 3) {
                         if (countYng == 1) {
-                            this.newPanel[i][j] = "yng";
+                            newPanel[i][j] = "yng";
                         } else if (conutYang == 1) {
-                            this.newPanel[i][j] = "yang";
+                            newPanel[i][j] = "yang";
                         }
                     }
                 } else {
-                    if (sum > 4 || sum < 2) {
-                        this.newPanel[i][j] = null;
-                    } else if (point == "yng" && conutYang == 4) {
-                        this.newPanel[i][j] = null;
-                    } else if (point == "yang" && countYng == 4) {
-                        this.newPanel[i][j] = null;
+                    if (
+                        sum > 4 ||
+                        sum < 2 ||
+                        (point == "yng" && conutYang == 4) ||
+                        (point == "yang" && countYng == 4)
+                    ) {
+                        continue;
                     } else {
-                        this.newPanel[i][j] = point;
+                        newPanel[i][j] = point;
                     }
                 }
             }
         }
-        this.startPanel.panel = this.newPanel;
-        this.newPanel = this.startPanel.defaultMatrix();
+        // Чтобы комп не взлетел надо сбросить кэш, 
+        // if (this.oldPanels.length > 400) {
+        //     console.log('refresh!');
+        //     this.oldPanels = [];
+        // }
+        this.oldPanels.push(this.startPanel.panel);
+        this.startPanel.panel = newPanel;
     }
 
     //  координаты соседей точки - окрестность мура 1 порядка

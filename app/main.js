@@ -15,8 +15,36 @@ __webpack_require__.r(__webpack_exports__);
 class IngYangGame {
     constructor(startPanel) {
         this.startPanel = startPanel;
-        this.newPanel = startPanel.defaultMatrix();
+        this.oldPanels = [];
         this.worldHeight = startPanel.panel.length;
+    }
+
+    // проверка конфигурации на зацикливание 
+    checkLoops() {
+        for (let i = this.oldPanels.length - 1; i >= 0; i--) {
+            if (this.isEqualMatix(this.startPanel.panel, this.oldPanels[i])) {
+                return {
+                    count: this.oldPanels.length - i,
+                    message:
+                        this.oldPanels.length - i == 1
+                            ? `Данная конфигурация приняла стабильное состояние`
+                            : `Зацикливание. Конфигурация повторилась на ${this.oldPanels.length - i} шаге цикла`,
+                };
+            }
+        }
+        return false;
+    }
+
+    // сравнивание двух матриц
+    isEqualMatix(matrix1, matrix2) {
+        for (let i = 0; i < this.worldHeight; i++) {
+            for (let j = 0; j < this.worldHeight; j++) {
+                if (matrix1[i][j] != matrix2[i][j]) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     // выполнить переход
@@ -33,11 +61,13 @@ class IngYangGame {
                 }
             }
         }
+        return this.checkLoops();
     }
 
     // следующие поколение клеток
     nextGeneration() {
         let point;
+        const newPanel = this.startPanel.defaultMatrix();
         for (let i = 0; i < this.worldHeight; i++) {
             for (let j = 0; j < this.worldHeight; j++) {
                 point = this.startPanel.panel[i][j];
@@ -46,26 +76,32 @@ class IngYangGame {
                 if (!point) {
                     if (sum == 3) {
                         if (countYng == 1) {
-                            this.newPanel[i][j] = "yng";
+                            newPanel[i][j] = "yng";
                         } else if (conutYang == 1) {
-                            this.newPanel[i][j] = "yang";
+                            newPanel[i][j] = "yang";
                         }
                     }
                 } else {
-                    if (sum > 4 || sum < 2) {
-                        this.newPanel[i][j] = null;
-                    } else if (point == "yng" && conutYang == 4) {
-                        this.newPanel[i][j] = null;
-                    } else if (point == "yang" && countYng == 4) {
-                        this.newPanel[i][j] = null;
+                    if (
+                        sum > 4 ||
+                        sum < 2 ||
+                        (point == "yng" && conutYang == 4) ||
+                        (point == "yang" && countYng == 4)
+                    ) {
+                        continue;
                     } else {
-                        this.newPanel[i][j] = point;
+                        newPanel[i][j] = point;
                     }
                 }
             }
         }
-        this.startPanel.panel = this.newPanel;
-        this.newPanel = this.startPanel.defaultMatrix();
+        // Чтобы комп не взлетел надо сбросить кэш, 
+        // if (this.oldPanels.length > 400) {
+        //     console.log('refresh!');
+        //     this.oldPanels = [];
+        // }
+        this.oldPanels.push(this.startPanel.panel);
+        this.startPanel.panel = newPanel;
     }
 
     //  координаты соседей точки - окрестность мура 1 порядка
@@ -536,7 +572,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const colors = { empty: "#FFFFFF", yng: "#000000", yang: "#FF0000", grid: "black" };
-    // const colors = { empty: "#D3D3D3", yng: "#008000", yang: "#FF0000", grid: "black" };
 
     (0,_modules_local_storage__WEBPACK_IMPORTED_MODULE_3__.getDataFromLocalStorage)();
     (0,_modules_local_storage__WEBPACK_IMPORTED_MODULE_3__.postDataToLocalStorage)();
@@ -553,6 +588,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* -------------------------------НАЧАЛО_ИГРЫ-------------------------------------------------------------------- */
     const startButton = document.querySelector("#start_button"),
+        stopButton = document.querySelector("#stop_button"),
         dItems = document.querySelectorAll("[data-disalbe]"),
         stepCount = document.querySelector(".step_count");
 
@@ -576,21 +612,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let game;
 
+    stopButton.addEventListener("click", () => {
+        // console.log(game.oldPanels);
+        clearInterval(interval);
+    });
+
     startButton.addEventListener("click", () => {
         // disable();
-        isStarted = true;
-        curStep = 0;
-        game = new _modules_calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_2__.default(startPanel);
+        if (!isStarted) {
+            isStarted = true;
+            curStep = 0;
+            game = new _modules_calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_2__.default(startPanel);
+        }
         interval = setInterval(() => start(), 10);
     });
 
+    console.log(stopButton);
+
+    function stopInterval(message) {
+        clearInterval(interval);
+        // allow();
+        stepCount.innerHTML = `${message}`;
+        isStarted = false;
+    }
+
     function start() {
         curStep++;
-        game.nextStep();
+        let result = game.nextStep();
+        if (result) {
+            stopInterval(`${result.message}. Количество шагов: ${curStep}`);
+            return;
+        }
         if (game.getLiveCount() == 0) {
-            clearInterval(interval);
-            // allow();
-            isStarted = false;
+            stopInterval(`
+                На поле не осталось ни одной «живой» клетки, количество шагов: ${curStep}`);
+            return;
         }
         stepCount.innerHTML = `Step: ${curStep}`;
     }
