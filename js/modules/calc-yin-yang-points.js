@@ -83,7 +83,7 @@ class IngYangGame {
             }
         }
         // Чтобы комп не взлетел надо сбросить кэш,
-        if (this.oldPanels.length > 150 && this.count < 2) {
+        if (this.oldPanels.length > 100 && this.count < 6) {
             this.count++;
             console.log("refresh!");
             this.oldPanels = [];

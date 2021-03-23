@@ -97,7 +97,7 @@ class IngYangGame {
             }
         }
         // Чтобы комп не взлетел надо сбросить кэш,
-        if (this.oldPanels.length > 150 && this.count < 2) {
+        if (this.oldPanels.length > 100 && this.count < 6) {
             this.count++;
             console.log("refresh!");
             this.oldPanels = [];
@@ -489,6 +489,101 @@ function pointsGeneration(startPanel, colors) {
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (pointsGeneration);
 
 
+/***/ }),
+
+/***/ "./js/modules/start-game.js":
+/*!**********************************!*\
+  !*** ./js/modules/start-game.js ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./calc-yin-yang-points */ "./js/modules/calc-yin-yang-points.js");
+
+
+function startGame(startPanel) {
+    const startButton = document.querySelector("#start_button"),
+        stopButton = document.querySelector("#stop_button"),
+        dItems = document.querySelectorAll("[data-disalbe]"),
+        report = document.querySelector(".report"),
+        stepCount = document.querySelector(".step_count");
+
+    function disable() {
+        for (const item of dItems) {
+            item.classList.add(".disabled");
+            item.disabled = true;
+        }
+    }
+
+    function allow() {
+        for (const item of dItems) {
+            item.classList.remove(".disabled");
+            item.disabled = false;
+        }
+    }
+
+    let isStarted = false,
+        isPaused = false,
+        curStep,
+        interval;
+
+    let game;
+
+    function eventStart() {
+        if (!isStarted) {
+            isStarted = true;
+            report.innerText = "";
+            curStep = 0;
+            game = new _calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_0__.default(startPanel);
+            stopButton.innerText = "PAUSE";
+            interval = setInterval(() => start(), 10);
+        }
+        if (isPaused) {
+            isPaused = false;
+            stopButton.innerText = "PAUSE";
+            interval = setInterval(() => start(), 10);
+        }
+    }
+
+    stopButton.addEventListener("click", () => {
+        if (isStarted && !isPaused) {
+            isPaused = true;
+            clearInterval(interval);
+            stopButton.innerText = "CONTINUE";
+        } else if (isPaused && curStep > 0) {
+            eventStart();
+        }
+    });
+
+    startButton.addEventListener("click", eventStart);
+
+    function stopInterval(message) {
+        clearInterval(interval);
+        // allow();
+        report.innerText = `${message}`;
+        isStarted = false;
+        stopButton.innerText = "PAUSE";
+    }
+
+    function start() {
+        curStep++;
+        let result = game.nextStep();
+        if (result) {
+            stopInterval(`${result.message}. Количество шагов: ${curStep}`);
+        } else if (game.getLiveCount() == 0) {
+            stopInterval(`На поле не осталось ни одной «живой» клетки, количество шагов: ${curStep}`);
+            return;
+        }
+        stepCount.innerText = `Step: ${curStep}`;
+    }
+}
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (startGame);
+
+
 /***/ })
 
 /******/ 	});
@@ -555,7 +650,7 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_points_generation__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/points-generation */ "./js/modules/points-generation.js");
 /* harmony import */ var _modules_canvas__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/canvas */ "./js/modules/canvas.js");
-/* harmony import */ var _modules_calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/calc-yin-yang-points */ "./js/modules/calc-yin-yang-points.js");
+/* harmony import */ var _modules_start_game__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/start-game */ "./js/modules/start-game.js");
 /* harmony import */ var _modules_local_storage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/local-storage */ "./js/modules/local-storage.js");
 
 
@@ -589,69 +684,7 @@ document.addEventListener("DOMContentLoaded", () => {
     container.appendChild(startPanel.grid);
 
     /* -------------------------------НАЧАЛО_ИГРЫ-------------------------------------------------------------------- */
-    const startButton = document.querySelector("#start_button"),
-        stopButton = document.querySelector("#stop_button"),
-        dItems = document.querySelectorAll("[data-disalbe]"),
-        report = document.querySelector(".report"),
-        stepCount = document.querySelector(".step_count");
-
-    function disable() {
-        for (const item of dItems) {
-            item.classList.add(".disabled");
-            item.disabled = true;
-        }
-    }
-
-    function allow() {
-        for (const item of dItems) {
-            item.classList.remove(".disabled");
-            item.disabled = false;
-        }
-    }
-
-    let isStarted = false,
-        curStep,
-        interval;
-
-    let game;
-
-    stopButton.addEventListener("click", () => {
-        // console.log(game.oldPanels);
-        clearInterval(interval);
-    });
-
-    startButton.addEventListener("click", () => {
-        // disable();
-        if (!isStarted) {
-            isStarted = true;
-            report.innerText = "";
-            curStep = 0;
-            game = new _modules_calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_2__.default(startPanel);
-        }
-        interval = setInterval(() => start(), 10);
-    });
-
-    function stopInterval(message) {
-        clearInterval(interval);
-        // allow();
-        report.innerText = `${message}`;
-        isStarted = false;
-    }
-
-    function start() {
-        curStep++;
-        let result = game.nextStep();
-        if (result) {
-            stopInterval(`${result.message}. Количество шагов: ${curStep}`);
-            return;
-        }
-        if (game.getLiveCount() == 0) {
-            stopInterval(`
-                На поле не осталось ни одной «живой» клетки, количество шагов: ${curStep}`);
-            return;
-        }
-        stepCount.innerText = `Step: ${curStep}`;
-    }
+    (0,_modules_start_game__WEBPACK_IMPORTED_MODULE_2__.default)(startPanel);
 });
 
 })();
