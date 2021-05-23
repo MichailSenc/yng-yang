@@ -1,10 +1,10 @@
-const path = require('path');
-const url = require('url');
-const {app, BrowserWindow } = require('electron');
+const path = require("path");
+const url = require("url");
+const { app, BrowserWindow } = require("electron");
 
 let win;
 function createWindow() {
-    win = new BrowserWindow({ width: 950, height: 800 });
+    win = new BrowserWindow({ width: 950, height: 810, autoHideMenuBar: false });
     win.loadURL(
         url.format({
             pathname: path.join(__dirname, "index.html"),

@@ -3,7 +3,11 @@ import IngYangGame from "./calc-yin-yang-points";
 function startGame(startPanel) {
     const startButton = document.querySelector("#start_button"),
         stopButton = document.querySelector("#stop_button"),
+        nextStepButton = document.querySelector("#next_step_button"),
+        generButton = document.querySelector("#generate_button"),
+        clearButton = document.querySelector("#clear_button"),
         dItems = document.querySelectorAll("[data-disalbe]"),
+        curCountAlive = document.querySelector("#cur_live_count"),
         report = document.querySelector(".report"),
         stepCount = document.querySelector(".step_count");
 
@@ -44,6 +48,7 @@ function startGame(startPanel) {
         }
     }
 
+
     stopButton.addEventListener("click", () => {
         if (isStarted && !isPaused) {
             isPaused = true;
@@ -55,6 +60,29 @@ function startGame(startPanel) {
     });
 
     startButton.addEventListener("click", eventStart);
+    nextStepButton.addEventListener("click", () => {
+        if (!isStarted) {
+            isStarted = true;
+            isPaused = true;
+            report.innerText = "";
+            curStep = 0;
+            game = new IngYangGame(startPanel);
+            stopButton.innerText = "PAUSE";
+        }
+        start();
+    });
+
+    function stopGame() {
+        isStarted = false;
+        isPaused = false;
+        if (interval) clearInterval(interval);
+        report.innerText = "";
+        curStep = 0;
+        stopButton.innerText = "PAUSE";
+    }
+
+    generButton.addEventListener('click', stopGame);
+    clearButton.addEventListener('click', stopGame);
 
     function stopInterval(message) {
         clearInterval(interval);
@@ -67,6 +95,7 @@ function startGame(startPanel) {
     function start() {
         curStep++;
         let result = game.nextStep();
+        curCountAlive.innerText = `Живые клетки: ${game.getLiveCount()}`;
         if (result) {
             stopInterval(`${result.message}. Количество шагов: ${curStep}`);
         } else if (game.getLiveCount() == 0) {

@@ -10,6 +10,7 @@ function pointsGeneration(startPanel, colors) {
         const percentYin = document.querySelector("#yin_percent"),
             percentYang = document.querySelector("#yang_percent"),
             countAlive = document.querySelector("#count_alive"),
+            curCountAlive = document.querySelector("#cur_live_count"),
             generButton = document.querySelector("#generate_button");
 
         function changePercent(param1, param2) {
@@ -59,6 +60,8 @@ function pointsGeneration(startPanel, colors) {
                 startPanel.putCoordinate({ x, y });
             }
             startPanel.settings.cellType = prevCellType;
+            curCountAlive.innerText = `Живые клетки: ${+countAlive.value}`;
+            document.querySelector('.step_count').innerText = 'Step: 0'
         });
     }
 

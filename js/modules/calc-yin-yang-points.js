@@ -4,6 +4,8 @@ class IngYangGame {
         this.oldPanels = [];
         this.worldHeight = startPanel.panel.length;
         this.count = 0;
+        this.isChecked = document.querySelector("#is_checked").checked;
+        console.log(this.isChecked);
     }
 
     // проверка конфигурации на зацикливание
@@ -83,12 +85,14 @@ class IngYangGame {
             }
         }
         // Чтобы комп не взлетел надо сбросить кэш,
-        if (this.oldPanels.length > 100 && this.count < 6) {
-            this.count++;
-            console.log("refresh!");
-            this.oldPanels = [];
-        }
-        this.oldPanels.push(this.startPanel.panel);
+        if (this.isChecked) {
+            if (this.oldPanels.length > 150 && this.count < 3) {
+                this.count++;
+                console.log("refresh!");
+                this.oldPanels = [];
+            }
+            this.oldPanels.push(this.startPanel.panel);
+        } 
         this.startPanel.panel = newPanel;
     }
 

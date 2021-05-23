@@ -12,6 +12,8 @@ class SrartPanel {
 
     // очистить полотно
     clearCanvas() {
+        document.querySelector('#cur_live_count').innerText = 'Живые клетки: 0'
+        document.querySelector('.step_count').innerText = 'Step: 0'
         this.canvas.getContext("2d").clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 

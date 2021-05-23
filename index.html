@@ -16,7 +16,9 @@
             <div class="layer1">
                 <div class="canvas_coordinates">X: 0; Y: 0</div>
                 <div class="step_count">Step: 0</div>
+                <div id="cur_live_count">Живые клетки: 0</div>
                 <p><input type="checkbox" id="grid_checkbox" checked data-disalbe />Сетка</p>
+                <p><input type="checkbox" id="is_checked" checked data-disalbe />Проверки</p>
                 <p class="hidden"><input type="checkbox" id="canvas_checkbox" checked data-disalbe />Полотно</p>
             </div>
             <div class="layer1">
@@ -27,9 +29,9 @@
             </div>
             <div class="layer1">
                 <p class="decor"><b>Рандомная генерация</b></p>
-                <p><input type="number" id="count_alive" value="20" /> - число живых клеток</p>
-                <p><input type="number" id="yin_percent" value="50" /> - процент Инь</p>
-                <p><input type="number" id="yang_percent" value="50" /> - процент Ян</p>
+                <p><input type="number" id="count_alive" value="2000" /> - число живых клеток</p>
+                <p><input type="number" id="yin_percent" value="60" /> - процент Инь</p>
+                <p><input type="number" id="yang_percent" value="40" /> - процент Ян</p>
             </div>
             <div class="layer1">
                 <button id="generate_button" data-disalbe>Generate</button>
@@ -38,12 +40,13 @@
             <div class="layer1" id="buttons">
                 <button id="start_button">START</button>
                 <button id="stop_button">STOP</button>
+                <button id="next_step_button">NEXT STEP</button>
             </div>
         </div>
         <!-- <canvas></canvas> -->
     </body>
-    <script>
-        require('./render.js');
-    </script>
+    <!-- <script>
+        require('render.js');
+    </script> -->
     <script src="./app/main.js"></script>
 </html>

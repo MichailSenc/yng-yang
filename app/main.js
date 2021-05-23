@@ -18,6 +18,8 @@ class IngYangGame {
         this.oldPanels = [];
         this.worldHeight = startPanel.panel.length;
         this.count = 0;
+        this.isChecked = document.querySelector("#is_checked").checked;
+        console.log(this.isChecked);
     }
 
     // проверка конфигурации на зацикливание
@@ -97,12 +99,14 @@ class IngYangGame {
             }
         }
         // Чтобы комп не взлетел надо сбросить кэш,
-        if (this.oldPanels.length > 100 && this.count < 6) {
-            this.count++;
-            console.log("refresh!");
-            this.oldPanels = [];
-        }
-        this.oldPanels.push(this.startPanel.panel);
+        if (this.isChecked) {
+            if (this.oldPanels.length > 150 && this.count < 3) {
+                this.count++;
+                console.log("refresh!");
+                this.oldPanels = [];
+            }
+            this.oldPanels.push(this.startPanel.panel);
+        } 
         this.startPanel.panel = newPanel;
     }
 
@@ -180,6 +184,8 @@ class SrartPanel {
 
     // очистить полотно
     clearCanvas() {
+        document.querySelector('#cur_live_count').innerText = 'Живые клетки: 0'
+        document.querySelector('.step_count').innerText = 'Step: 0'
         this.canvas.getContext("2d").clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
@@ -400,6 +406,7 @@ function pointsGeneration(startPanel, colors) {
         const percentYin = document.querySelector("#yin_percent"),
             percentYang = document.querySelector("#yang_percent"),
             countAlive = document.querySelector("#count_alive"),
+            curCountAlive = document.querySelector("#cur_live_count"),
             generButton = document.querySelector("#generate_button");
 
         function changePercent(param1, param2) {
@@ -449,6 +456,8 @@ function pointsGeneration(startPanel, colors) {
                 startPanel.putCoordinate({ x, y });
             }
             startPanel.settings.cellType = prevCellType;
+            curCountAlive.innerText = `Живые клетки: ${+countAlive.value}`;
+            document.querySelector('.step_count').innerText = 'Step: 0'
         });
     }
 
@@ -507,7 +516,11 @@ __webpack_require__.r(__webpack_exports__);
 function startGame(startPanel) {
     const startButton = document.querySelector("#start_button"),
         stopButton = document.querySelector("#stop_button"),
+        nextStepButton = document.querySelector("#next_step_button"),
+        generButton = document.querySelector("#generate_button"),
+        clearButton = document.querySelector("#clear_button"),
         dItems = document.querySelectorAll("[data-disalbe]"),
+        curCountAlive = document.querySelector("#cur_live_count"),
         report = document.querySelector(".report"),
         stepCount = document.querySelector(".step_count");
 
@@ -548,6 +561,7 @@ function startGame(startPanel) {
         }
     }
 
+
     stopButton.addEventListener("click", () => {
         if (isStarted && !isPaused) {
             isPaused = true;
@@ -559,6 +573,29 @@ function startGame(startPanel) {
     });
 
     startButton.addEventListener("click", eventStart);
+    nextStepButton.addEventListener("click", () => {
+        if (!isStarted) {
+            isStarted = true;
+            isPaused = true;
+            report.innerText = "";
+            curStep = 0;
+            game = new _calc_yin_yang_points__WEBPACK_IMPORTED_MODULE_0__.default(startPanel);
+            stopButton.innerText = "PAUSE";
+        }
+        start();
+    });
+
+    function stopGame() {
+        isStarted = false;
+        isPaused = false;
+        if (interval) clearInterval(interval);
+        report.innerText = "";
+        curStep = 0;
+        stopButton.innerText = "PAUSE";
+    }
+
+    generButton.addEventListener('click', stopGame);
+    clearButton.addEventListener('click', stopGame);
 
     function stopInterval(message) {
         clearInterval(interval);
@@ -571,6 +608,7 @@ function startGame(startPanel) {
     function start() {
         curStep++;
         let result = game.nextStep();
+        curCountAlive.innerText = `Живые клетки: ${game.getLiveCount()}`;
         if (result) {
             stopInterval(`${result.message}. Количество шагов: ${curStep}`);
         } else if (game.getLiveCount() == 0) {
