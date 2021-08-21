@@ -1,20 +1,48 @@
 {
-  "name": "yng-yang",
-  "version": "1.0.0",
-  "description": "My term paper project - yng-yang",
-  "main": "webpack.config.js",
-  "scripts": {
-    "start": "electron ."
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MichailSenc/yng-yang.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/MichailSenc/yng-yang/issues"
-  },
-  "homepage": "https://github.com/MichailSenc/yng-yang#readme",
-  "dependencies": {}
+    "name": "yng-yang",
+    "version": "1.0.0",
+    "description": "yng-yang cellular automation",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/MichailSenc/yng-yang.git"
+    },
+    "bugs": {
+        "url": "https://github.com/MichailSenc/yng-yang/issues"
+    },
+    "homepage": "https://github.com/MichailSenc/yng-yang#readme",
+    "engines": {
+        "node": ">=14.17.4",
+        "npm": ">=6.14.14"
+    },
+    "scripts": {
+        "start": "gulp",
+        "build": "gulp build"
+    },
+    "author": "Mixail",
+    "license": "ISC",
+    "dependencies": {},
+    "devDependencies": {
+        "@babel/core": "^7.15.0",
+        "browser-sync": "^2.27.5",
+        "del": "^6.0.0",
+        "gulp": "^4.0.2",
+        "gulp-autoprefixer": "^8.0.0",
+        "gulp-better-rollup": "^4.0.1",
+        "gulp-clean-css": "^4.3.0",
+        "gulp-file-include": "^2.3.0",
+        "gulp-group-css-media-queries": "^1.2.2",
+        "gulp-newer": "^1.4.0",
+        "gulp-plumber": "^1.2.1",
+        "gulp-rename": "^2.0.0",
+        "gulp-sass": "^5.0.0",
+        "gulp-sourcemaps": "^3.0.0",
+        "gulp-uglify-es": "^3.0.0",
+        "gulp-watch": "^5.0.1",
+        "rollup": "^2.56.2",
+        "rollup-plugin-babel": "^4.4.0",
+        "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-node-resolve": "^5.2.0",
+        "sass": "1.37.5",
+        "transform-runtime": "^0.0.0"
+    }
 }
