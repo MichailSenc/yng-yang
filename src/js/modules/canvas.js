@@ -48,21 +48,21 @@ class SrartPanel {
 
     setEventListeners() {
         // Показать/убрать сетку
-        const gridCheck = document.querySelector("#grid_checkbox"),
-            canvasCheck = document.querySelector("#canvas_checkbox");
+        const gridCheck = document.querySelector("#grid-checkbox"),
+            canvasCheck = document.querySelector("#canvas-checkbox");
 
-        if (!gridCheck.checked) this.grid.classList.add("hidden");
-        if (!canvasCheck.checked) this.canvas.classList.add("hidden");
+        if (!gridCheck.checked) this.grid.classList.add("_hidden");
+        if (!canvasCheck.checked) this.canvas.classList.add("_hidden");
 
         gridCheck.addEventListener("input", () => {
-            this.grid.classList.toggle("hidden");
+            this.grid.classList.toggle("_hidden");
         });
         // Показать/убрать полото
         canvasCheck.addEventListener("input", () => {
-            this.canvas.classList.toggle("hidden");
+            this.canvas.classList.toggle("_hidden");
         });
 
-        document.querySelector("#clear_button").addEventListener("click", () => {
+        document.querySelector("#clear-button").addEventListener("click", () => {
             this.clearCanvas();
             this.setDefaultMatrix();
         });
@@ -81,28 +81,23 @@ function createStartPanel(colors, settings) {
     const { width, height, cellSize } = settings;
     // сетка canvas
     function createGrid() {
-        const cnv = document.createElement("canvas");
-        cnv.id = "grid_canvas";
+        const cnv = document.querySelector("#grig-canvas");
         cnv.width = width;
         cnv.height = height;
         let ctx = cnv.getContext("2d");
         ctx.strokeStyle = colors.grid;
         let w = cnv.width - 1;
         let h = cnv.height - 1;
-        for (let x = 0; x < w; x += cellSize) ctx.strokeRect(x, 0, 0.1, h);
-        for (let y = 0; y < h; y += cellSize) ctx.strokeRect(0, y, w, 0.1);
+        for (let x = 0; x <= w; x += cellSize) ctx.strokeRect(x, 0, 0.1, h);
+        for (let y = 0; y <= h; y += cellSize) ctx.strokeRect(0, y, w, 0.1);
         return cnv;
     }
 
     // основное полотно
     function createCanvas() {
-        const cnv = document.createElement("canvas");
-        cnv.classList.add("background");
-        cnv.classList.add("transparency");
-        cnv.id = "canvas";
+        const cnv = document.querySelector("#main-canvas");
         cnv.width = width;
         cnv.height = height;
-        cnv.style.backgroundColor = colors.empty;
         return cnv;
     }
 

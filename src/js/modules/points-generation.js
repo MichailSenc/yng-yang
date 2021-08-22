@@ -1,16 +1,15 @@
 import EmptyPoints from "./empty-points";
 
 function pointsGeneration(startPanel, colors) {
-    const canvas = startPanel.canvas,
-        ctx = canvas.getContext("2d");
+    const canvas = startPanel.canvas;
     let { width, height, cellSize } = startPanel.settings;
 
     /* -----------------------Рандомная генерация-------------------------------------------------*/
     function randomGeneration() {
-        const percentYin = document.querySelector("#yin_percent"),
-            percentYang = document.querySelector("#yang_percent"),
-            countAlive = document.querySelector("#count_alive"),
-            generButton = document.querySelector("#generate_button");
+        const percentYin = document.querySelector("#yin-percent"),
+            percentYang = document.querySelector("#yang-percent"),
+            countAlive = document.querySelector("#count-alive"),
+            generButton = document.querySelector("#generate-button");
 
         function changePercent(param1, param2) {
             let value = +param2.value > 100 ? 100 : +param2.value < 0 ? 0 : +param2.value;
@@ -85,7 +84,7 @@ function pointsGeneration(startPanel, colors) {
             startPanel.putCoordinate(windowToCanvas(e.target, e.clientX, e.clientY));
         });
 
-        const canvasCoordinates = document.querySelector(".canvas_coordinates");
+        const canvasCoordinates = document.querySelector("#current-coordinates");
         canvas.addEventListener("mousemove", (e) => {
             let { x, y } = windowToCanvas(e.target, e.clientX, e.clientY);
             canvasCoordinates.innerHTML = `X: ${x / cellSize}; Y: ${y / cellSize}`;

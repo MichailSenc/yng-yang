@@ -1,10 +1,10 @@
 function getAttributes() {
     return [
-        document.querySelector("#count_alive"),
-        document.querySelector("#yin_percent"),
-        document.querySelector("#yang_percent"),
-        document.querySelector("#grid_checkbox"),
-        document.querySelector("#canvas_checkbox"),
+        document.querySelector("#count-alive"),
+        document.querySelector("#yin-percent"),
+        document.querySelector("#yang-percent"),
+        document.querySelector("#grid-checkbox"),
+        document.querySelector("#canvas-checkbox"),
     ];
 }
 

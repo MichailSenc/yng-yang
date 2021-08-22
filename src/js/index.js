@@ -4,17 +4,17 @@ import startGame from "./modules/start-game";
 import { getDataFromLocalStorage, postDataToLocalStorage } from "./modules/local-storage";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const container = document.querySelector("#container");
     /* -------------------------------НАСТРОЙКИ---------------------------------------------------------------------- */
+    const container = document.querySelector("#container");
     const cell = 4;
     const settings = {
         cellSize: cell,
-        width: Math.floor(650 / cell) * cell + 1,
-        height: Math.floor(650 / cell) * cell + 1,
+        width: Math.floor(container.clientWidth / cell) * cell + 1,
+        height: Math.floor(container.clientHeight / cell) * cell + 1,
         cellType: "empty",
     };
 
-    const colors = { empty: "#FFFFFF", yng: "#000000", yang: "#FF0000", grid: "black" };
+    const colors = { empty: "#FFFFFF", yng: "#000000", yang: "#FF0000", grid: "rgb(0,0,0,0.3)" };
 
     getDataFromLocalStorage();
     postDataToLocalStorage();
@@ -25,9 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
     startPanel.setEventListeners();
 
     pointsGeneration(startPanel);
-
-    container.appendChild(startPanel.canvas);
-    container.appendChild(startPanel.grid);
 
     /* -------------------------------НАЧАЛО_ИГРЫ-------------------------------------------------------------------- */
     startGame(startPanel);

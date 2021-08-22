@@ -1,11 +1,11 @@
 import IngYangGame from "./calc-yin-yang-points";
 
 function startGame(startPanel) {
-    const startButton = document.querySelector("#start_button"),
-        stopButton = document.querySelector("#stop_button"),
+    const startButton = document.querySelector("#start-button"),
+        stopButton = document.querySelector("#stop-button"),
         dItems = document.querySelectorAll("[data-disalbe]"),
         report = document.querySelector(".report"),
-        stepCount = document.querySelector(".step_count");
+        stepCount = document.querySelector("#step-count");
 
     function disable() {
         for (const item of dItems) {
@@ -32,6 +32,7 @@ function startGame(startPanel) {
         if (!isStarted) {
             isStarted = true;
             report.innerText = "";
+            report.classList.remove("_active");
             curStep = 0;
             game = new IngYangGame(startPanel);
             stopButton.innerText = "PAUSE";
@@ -60,6 +61,7 @@ function startGame(startPanel) {
         clearInterval(interval);
         // allow();
         report.innerText = `${message}`;
+        report.classList.add("_active");
         isStarted = false;
         stopButton.innerText = "PAUSE";
     }
