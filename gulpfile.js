@@ -8,10 +8,15 @@ const autoprefixer = require("gulp-autoprefixer"),
     group_media = require("gulp-group-css-media-queries"),
     plumber = require("gulp-plumber"),
     rename = require("gulp-rename"),
-    newer = require("gulp-newer"),
     scss = require("gulp-sass")(require("sass")),
     sourcemaps = require("gulp-sourcemaps"),
-    uglify = require("gulp-uglify-es").default;
+    uglify = require("gulp-uglify-es").default,
+    fonter = require("gulp-fonter"),
+    fs = require("fs"),
+    imagemin = require("gulp-imagemin"),
+    newer = require("gulp-newer"),
+    ttf2woff = require("gulp-ttf2woff"),
+    ttf2woff2 = require("gulp-ttf2woff2");
 
 const rollup = require("gulp-better-rollup"),
     babel = require("rollup-plugin-babel"),
@@ -23,16 +28,21 @@ const directories = {
         html: "./dist/",
         js: "./dist/js/",
         css: "./dist/css/",
+        images: "./dist/img/",
+        fonts: "./dist/fonts/",
     },
     src: {
         html: ["./src/**/*.html", "!" + "./src/_*.html"],
-        js: ["./src/js/index.js", "./src/js/script.js"],
+        js: ["./src/js/{index,script}.js"],
         css: "./src/scss/style.scss",
+        fonts: "./src/fonts/*.ttf",
+        images: ["./src/img/**/*.{jpg,jpeg,png,svg,gif,ico,webp}"],
     },
     watch: {
         html: "./src/**/*.html",
         js: "./src/**/*.js",
         css: "./src/scss/**/*.scss",
+        images: "./src/img/**/*.{jpg,jpeg,png,svg,gif,ico,webp}",
     },
     clean: "./dist",
 };
@@ -43,16 +53,6 @@ function browserSync(done) {
         notify: false,
         port: 3000,
     });
-}
-
-function copyFolders() {
-    ["videos", "img", "data", "fonts"].forEach((folder) => {
-        src("src/" + folder + "/**/*.*", {})
-            .pipe(newer("./" + folder + "/"))
-            .pipe(dest("./dist/" + folder + "/"));
-    });
-
-    return src(directories.src.html).pipe(browsersync.stream());
 }
 
 function html() {
@@ -83,6 +83,63 @@ function js() {
         .pipe(browsersync.stream());
 }
 
+function images() {
+    return src(directories.src.images).pipe(newer(directories.build.images)).pipe(dest(directories.build.images));
+}
+
+function fonts() {
+    src(directories.src.fonts).pipe(plumber()).pipe(ttf2woff()).pipe(dest(directories.build.fonts));
+    return src(directories.src.fonts).pipe(ttf2woff2()).pipe(dest(directories.build.fonts)).pipe(browsersync.stream());
+}
+
+function fonts_otf() {
+    return src("./src/fonts/*.otf")
+        .pipe(plumber())
+        .pipe(fonter({ formats: ["ttf"] }))
+        .pipe(dest("./src/fonts/"));
+}
+
+function fontstyle() {
+    const filepath = "./src/scss/fonts.scss";
+    fs.access(filepath, (error) => {
+        if (error) return;
+
+        let file_content = fs.readFileSync(filepath);
+        if (file_content == "") {
+            fs.writeFile(filepath, "", () => {});
+            fs.readdir(directories.build.fonts, (err, items) => {
+                if (items) {
+                    let c_fontname;
+                    for (var i = 0; i < items.length; i++) {
+                        let fontname = items[i].split(".");
+                        fontname = fontname[0];
+                        if (c_fontname != fontname) {
+                            fs.appendFile(
+                                filepath,
+                                `@include font("${fontname}", "${fontname}", "400", "normal");\r\n`,
+                                () => {}
+                            );
+                        }
+                        c_fontname = fontname;
+                    }
+                }
+            });
+        }
+    });
+
+    return src(directories.src.html).pipe(browsersync.stream());
+}
+
+function copyFolders() {
+    ["videos"].forEach((folder) => {
+        src("./src/" + folder + "/**/*.*", {})
+            .pipe(newer("./" + folder + "/"))
+            .pipe(dest("./" + folder + "/"));
+    });
+
+    return src(directories.src.html).pipe(browsersync.stream());
+}
+
 function clean() {
     return del(directories.clean);
 }
@@ -91,6 +148,7 @@ function watchFiles() {
     gulp.watch([directories.watch.html], html);
     gulp.watch([directories.watch.css], css);
     gulp.watch([directories.watch.js], js);
+    gulp.watch([directories.watch.images], images);
 }
 
 function cssBuild() {
@@ -131,10 +189,25 @@ function htmlBuild() {
         .pipe(browsersync.stream());
 }
 
-let buildDev = gulp.series(clean, gulp.parallel(html, css, js));
-let watchDev = gulp.series(buildDev, gulp.parallel(copyFolders, watchFiles, browserSync));
-let build = gulp.series(clean, gulp.parallel(copyFolders, htmlBuild, cssBuild, jsBuild));
+function imagesBuild() {
+    return src(directories.src.images)
+        .pipe(
+            imagemin({
+                progressive: true,
+                svgoPlugins: [{ removeViewBox: false }],
+                interlaced: true,
+                optimizationLevel: 3, // 0 to 7
+            })
+        )
+        .pipe(dest(directories.build.images));
+}
 
+let fontsBuild = gulp.series(fonts_otf, fonts, fontstyle);
+let buildDev = gulp.series(clean, gulp.parallel(fontsBuild, copyFolders, html, css, js, images));
+let watchDev = gulp.series(buildDev, gulp.parallel(watchFiles, browserSync));
+let build = gulp.series(clean, gulp.parallel(htmlBuild, cssBuild, jsBuild, imagesBuild));
+
+exports.fonts = fontsBuild;
 exports.build = build;
 exports.watch = watchDev;
 exports.default = watchDev;

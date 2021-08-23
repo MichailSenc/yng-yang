@@ -16,19 +16,19 @@ function startGame(startPanel) {
 
     let timeout;
     function setActiveReport(text) {
-        report.querySelector(".text").innerText = text;
+        report.querySelector(".report__text").innerText = text;
         report.classList.add("_active");
 
         clearTimeout(timeout);
         timeout = setTimeout(() => {
-            report.querySelector(".text").innerText = "";
+            report.querySelector(".report__text").innerText = "";
             report.classList.remove("_active");
         }, 100000);
     }
 
     function removeActiveReport() {
         clearTimeout(timeout);
-        report.querySelector(".text").innerText = "";
+        report.querySelector(".report__text").innerText = "";
         report.classList.remove("_active");
     }
 
