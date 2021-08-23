@@ -1,4 +1,4 @@
-import IngYangGame from "./calc-yin-yang-points";
+import IngYangGame from "./yng-yang-game";
 
 function startGame(startPanel) {
     const startButton = document.querySelector("#start-button"),
@@ -12,6 +12,24 @@ function startGame(startPanel) {
             item.classList.add(".disabled");
             item.disabled = true;
         }
+    }
+
+    let timeout;
+    function setActiveReport(text) {
+        report.querySelector(".text").innerText = text;
+        report.classList.add("_active");
+
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            report.querySelector(".text").innerText = "";
+            report.classList.remove("_active");
+        }, 100000);
+    }
+
+    function removeActiveReport() {
+        clearTimeout(timeout);
+        report.querySelector(".text").innerText = "";
+        report.classList.remove("_active");
     }
 
     function allow() {
@@ -31,8 +49,7 @@ function startGame(startPanel) {
     function eventStart() {
         if (!isStarted) {
             isStarted = true;
-            report.innerText = "";
-            report.classList.remove("_active");
+            removeActiveReport();
             curStep = 0;
             game = new IngYangGame(startPanel);
             stopButton.innerText = "PAUSE";
@@ -60,8 +77,7 @@ function startGame(startPanel) {
     function stopInterval(message) {
         clearInterval(interval);
         // allow();
-        report.innerText = `${message}`;
-        report.classList.add("_active");
+        setActiveReport(message);
         isStarted = false;
         stopButton.innerText = "PAUSE";
     }

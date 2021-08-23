@@ -1,0 +1,33 @@
+@include font("icons", "icons", "400", "normal");
+
+%ic {
+    font-family: "icons";
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="_icon-"],
+[class*=" _icon-"] {
+    &:before {
+        @extend %ic;
+        display: block;
+    }
+}
+
+._icon-sidebar:before {
+    content: "\e900";
+}
+._icon-config:before {
+    content: "\e994";
+}
+._icon-cancel-circle:before {
+    content: "\ea0d";
+}
+._icon-cross:before {
+    content: "\ea0f";
+}

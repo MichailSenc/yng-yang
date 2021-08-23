@@ -2,6 +2,7 @@ class IngYangGame {
     constructor(startPanel) {
         this.startPanel = startPanel;
         this.oldPanels = [];
+        this.worldWidth = startPanel.panel[0].length;
         this.worldHeight = startPanel.panel.length;
         this.count = 0;
     }
@@ -25,7 +26,7 @@ class IngYangGame {
     // сравнивание двух матриц
     isEqualMatix(matrix1, matrix2) {
         for (let i = 0; i < this.worldHeight; i++) {
-            for (let j = 0; j < this.worldHeight; j++) {
+            for (let j = 0; j < this.worldWidth; j++) {
                 if (matrix1[i][j] != matrix2[i][j]) {
                     return false;
                 }
@@ -56,7 +57,7 @@ class IngYangGame {
         let point;
         const newPanel = this.startPanel.defaultMatrix();
         for (let i = 0; i < this.worldHeight; i++) {
-            for (let j = 0; j < this.worldHeight; j++) {
+            for (let j = 0; j < this.worldWidth; j++) {
                 point = this.startPanel.panel[i][j];
                 let { countYng, conutYang, sum } = this.countLiveNeighbors(i, j);
 
@@ -114,7 +115,7 @@ class IngYangGame {
         for (const item of neighbors) {
             let [_x, _y] = item;
             if (_x < 0 || _y < 0) continue;
-            if (_x > this.worldHeight - 1 || _y > this.worldHeight - 1) continue;
+            if (_x > this.worldHeight - 1 || _y > this.worldWidth - 1) continue;
             if (this.startPanel.panel[_x][_y]) {
                 if (this.startPanel.panel[_x][_y] == "yng") {
                     countYng++;

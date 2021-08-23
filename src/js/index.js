@@ -3,7 +3,27 @@ import SrartPanel from "./modules/canvas";
 import startGame from "./modules/start-game";
 import { getDataFromLocalStorage, postDataToLocalStorage } from "./modules/local-storage";
 
+const getData = async () => {
+    try {
+        const response = await fetch("../data/settings.json", {
+            method: "GET",
+            credentials: "same-origin",
+        });
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
+    // let settingsJSON = await
+    // getData().then((json) => {
+    //     console.log(json);
+    //     settingsJSON = json;
+    // });
+    const settingsJSON = getData();
+    console.log(settingsJSON);
     /* -------------------------------НАСТРОЙКИ---------------------------------------------------------------------- */
     const container = document.querySelector("#container");
     const cell = 4;

@@ -87,7 +87,8 @@ function pointsGeneration(startPanel, colors) {
         const canvasCoordinates = document.querySelector("#current-coordinates");
         canvas.addEventListener("mousemove", (e) => {
             let { x, y } = windowToCanvas(e.target, e.clientX, e.clientY);
-            canvasCoordinates.innerHTML = `X: ${x / cellSize}; Y: ${y / cellSize}`;
+            canvasCoordinates.innerHTML = `(x:${x / cellSize}, y:${y / cellSize})`;
+            // canvasCoordinates.innerHTML = `X: ${x / cellSize}; Y: ${y / cellSize}`;
         });
     }
     /* -------------------------------------------------------------------------------------------*/

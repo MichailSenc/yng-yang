@@ -35,4 +35,32 @@ function postDataToLocalStorage() {
     });
 }
 
+function settingsItems() {
+    return [
+        document.querySelector("settings-cell-size"),
+        document.querySelector("settings-yng-color"),
+        document.querySelector("settings-yang-color"),
+        document.querySelector("settings-grid-color"),
+    ];
+}
+
+function getSettings() {
+    settingsItems.forEach((item) => {
+        let value = localStorage.getItem(item.getAttribute("id"));
+        if (value) {
+            item.value = value;
+        }
+    });
+}
+
+function postSettings() {
+    settingsItems.forEach((item) => {
+        localStorage.setItem(item.getAttribute("id"));
+        let value = localStorage.getItem(item.getAttribute("id"));
+        if (value) {
+            item.value = value;
+        }
+    });
+}
+
 export { getDataFromLocalStorage, postDataToLocalStorage };

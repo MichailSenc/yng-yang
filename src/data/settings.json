@@ -1,0 +1,13 @@
+{
+    "default": {
+        "cell": 4,
+
+        "colors": {
+            "empty": "#FFFFFF",
+            "yng": "#000000",
+            "yang": "#FF0000",
+            "grid": "#b3b3b3"
+        }
+    },
+    "current": null
+}

@@ -12,72 +12,75 @@
             <div class="page">
                 <aside class="sidebar">
                     <div class="sidebar__container">
-                        <div class="sidebar__section">
-                            <div class="sidebar__coordinates" id="current-coordinates">Y: 0; Y: 0</div>
-                            <div class="sidebar__step-count" id="step-count">Step: 0</div>
-                        </div>
-
-                        <div class="sidebar__section">
-                            <div class="sidebar__checkbox">
+                        <div class="sidebar-section">
+                            <div class="sidebar-section__checkbox">
                                 <input type="checkbox" id="grid-checkbox" checked data-disalbe />
                                 <label for="grid-checkbox">Сетка</label>
                             </div>
 
-                            <div class="sidebar__checkbox">
+                            <div class="sidebar-section__checkbox">
                                 <input type="checkbox" id="canvas-checkbox" checked data-disalbe />
                                 <label for="canvas-checkbox">Полотно</label>
                             </div>
                         </div>
 
-                        <div class="sidebar__section">
-                            <p class="sidebar__title">Ручная установка</p>
-                            <p class="sidebar__checkbox">
+                        <div class="sidebar-section _md4-hidden">
+                            <p class="sidebar-section__title">Ручная установка</p>
+                            <p class="sidebar-section__checkbox">
                                 <input type="radio" name="radio" value="empty" checked />
                                 <span>Пустая</span>
                             </p>
-                            <p class="sidebar__checkbox">
+                            <p class="sidebar-section__checkbox">
                                 <input type="radio" name="radio" value="yng" />
                                 <span>Инь</span>
                             </p>
-                            <p class="sidebar__checkbox">
+                            <p class="sidebar-section__checkbox">
                                 <input type="radio" name="radio" value="yang" />
                                 <span>Ян</span>
                             </p>
                         </div>
 
-                        <div class="sidebar__section">
-                            <p class="sidebar__title">Рандомная генерация</p>
-                            <p class="sidebar__input">
-                                <span>Число живых клеток</span>
-                                <input type="number" id="count-alive" value="20" size="10" />
+                        <div class="sidebar-section">
+                            <p class="sidebar-section__title">Рандомная генерация</p>
+                            <p class="sidebar-section__input">
+                                <span>Количество клеток</span>
+                                <input type="number" id="count-alive" value="20" size="10" class="input" />
                             </p>
-                            <p class="sidebar__input">
+                            <p class="sidebar-section__input">
                                 <span>Процент Инь</span>
-                                <input type="number" id="yin-percent" value="50" size="10" />
+                                <input type="number" id="yin-percent" value="50" size="10" class="input" />
                             </p>
-                            <p class="sidebar__input">
+                            <p class="sidebar-section__input">
                                 <span>Процент Ян</span>
-                                <input type="number" id="yang-percent" value="50" size="10" />
+                                <input type="number" id="yang-percent" value="50" size="10" class="input" />
                             </p>
                         </div>
 
-                        <div class="sidebar__buttons">
-                            <div class="sidebar__buttons-group">
-                                <button class="button" id="generate-button" data-disalbe>Generate</button>
-                                <button class="button" id="clear-button" data-disalbe>Clear</button>
-                            </div>
-                            <div class="sidebar__buttons-group">
-                                <button class="button" id="start-button">START</button>
-                                <button class="button" id="stop-button">STOP</button>
-                            </div>
+                        <div class="sidebar-section">
+                            <button class="sidebar-section__button button" id="generate-button" data-disalbe>
+                                Generate
+                            </button>
+                            <button class="sidebar-section__button button" id="clear-button" data-disalbe>Clear</button>
+                            <button class="sidebar-section__button button" id="start-button">START</button>
+                            <button class="sidebar-section__button button" id="stop-button">STOP</button>
                         </div>
                     </div>
                 </aside>
                 <main class="main">
-                    <div class="main__parameters"></div>
                     <div class="main__container">
-                        <div class="report"></div>
+                        <div class="report">
+                            <p class="text"></p>
+                            <div class="cross">
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
                         <div class="canvases" id="container">
+                            <div class="canvases__data">
+                                <!-- <div class="canvases__coordinates" id="current-coordinates">Y: 0; Y: 0</div> -->
+                                <div class="canvases__coordinates" id="current-coordinates">x:0, y:0</div>
+                                <div class="canvases__step-count" id="step-count">Step: 0</div>
+                            </div>
                             <canvas class="canvases__main" id="main-canvas"></canvas>
                             <canvas class="canvases__grid" id="grig-canvas"></canvas>
                         </div>
@@ -85,7 +88,50 @@
                 </main>
             </div>
         </div>
+        <div class="settings-image _icon-config"></div>
+        <div class="settings">
+            <div class="settings__container">
+                <div class="settings__title">Параметры</div>
+                <div class="row">
+                    <div class="column30 settings__parametr" id="settings-cell-size">Размер клетки в пикселях</div>
+                    <div class="column70">
+                        <input type="number" placeholder="4" class="settings__input input" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column30 settings__parametr" id="settings-yng-color">Цвет Инь</div>
+                    <div class="column70">
+                        <input type="color" value="#000000" class="settings__input" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column30 settings__parametr" id="settings-yang-color">Цвет Янь</div>
+                    <div class="column70">
+                        <input type="color" value="#ff0000" class="settings__input" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column30 settings__parametr" id="settings-grid-color">Цвет сетки на полотне</div>
+                    <div class="column70">
+                        <input type="color" value="#b3b3b3" class="settings__input" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column40"></div>
+                    <div class="column20">
+                        <button class="settings__input button">По умолчанию</button>
+                    </div>
+                    <div class="column20">
+                        <button class="settings__input button">Применить</button>
+                    </div>
+                    <div class="column20">
+                        <button class="settings__input button">Отмена</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <!-- <canvas></canvas> -->
     </body>
     <script src="./js/index.min.js"></script>
+    <script src="./js/script.min.js"></script>
 </html>

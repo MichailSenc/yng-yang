@@ -8,6 +8,7 @@ const autoprefixer = require("gulp-autoprefixer"),
     group_media = require("gulp-group-css-media-queries"),
     plumber = require("gulp-plumber"),
     rename = require("gulp-rename"),
+    newer = require("gulp-newer"),
     scss = require("gulp-sass")(require("sass")),
     sourcemaps = require("gulp-sourcemaps"),
     uglify = require("gulp-uglify-es").default;
@@ -25,7 +26,7 @@ const directories = {
     },
     src: {
         html: ["./src/**/*.html", "!" + "./src/_*.html"],
-        js: ["./src/js/index.js"],
+        js: ["./src/js/index.js", "./src/js/script.js"],
         css: "./src/scss/style.scss",
     },
     watch: {
@@ -42,6 +43,16 @@ function browserSync(done) {
         notify: false,
         port: 3000,
     });
+}
+
+function copyFolders() {
+    ["videos", "img", "data", "fonts"].forEach((folder) => {
+        src("src/" + folder + "/**/*.*", {})
+            .pipe(newer("./" + folder + "/"))
+            .pipe(dest("./dist/" + folder + "/"));
+    });
+
+    return src(directories.src.html).pipe(browsersync.stream());
 }
 
 function html() {
@@ -121,8 +132,8 @@ function htmlBuild() {
 }
 
 let buildDev = gulp.series(clean, gulp.parallel(html, css, js));
-let watchDev = gulp.series(buildDev, gulp.parallel(watchFiles, browserSync));
-let build = gulp.series(clean, gulp.parallel(htmlBuild, cssBuild, jsBuild));
+let watchDev = gulp.series(buildDev, gulp.parallel(copyFolders, watchFiles, browserSync));
+let build = gulp.series(clean, gulp.parallel(copyFolders, htmlBuild, cssBuild, jsBuild));
 
 exports.build = build;
 exports.watch = watchDev;
