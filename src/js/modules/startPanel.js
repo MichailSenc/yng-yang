@@ -1,7 +1,7 @@
 // создать полотно, сетку и добавить события для чекбоксов
 class SrartPanel {
     constructor(colors, settings) {
-        const { canvas, grid } = createStartPanel(colors, settings);
+        const {canvas, grid} = createStartPanel(colors, settings);
         this._settings = settings;
         this._colors = colors;
         this.canvas = canvas;
@@ -22,7 +22,7 @@ class SrartPanel {
 
     // создать пустую матрицу поля
     defaultMatrix() {
-        const { width, height, cellSize } = this._settings,
+        const {width, height, cellSize} = this._settings,
             iMax = Math.floor(width / cellSize),
             jMax = Math.floor(height / cellSize),
             panel = [];
@@ -32,18 +32,40 @@ class SrartPanel {
     }
 
     putCoordinateToCanvas(x, y) {
-        const { cellSize, cellType } = this._settings,
+        const {cellSize, cellType} = this._settings,
             ctx = this.canvas.getContext("2d");
         ctx.fillStyle = this._colors[`${cellType}`];
         ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
     }
 
-    putCoordinate({ x, y }) {
-        const { cellSize, cellType } = this._settings,
+    putCoordinate({x, y}) {
+        const {cellSize, cellType} = this._settings,
             ctx = this.canvas.getContext("2d");
         this.panel[x / cellSize][y / cellSize] = cellType == "empty" ? null : cellType;
         ctx.fillStyle = this._colors[`${cellType}`];
         ctx.fillRect(x, y, cellSize, cellSize);
+    }
+
+    printCoordinates(colors) {
+        const {cellSize} = this._settings,
+            ctx = this.canvas.getContext("2d");
+        this.clearCanvas();
+        this.panel.forEach((arr, i) => {
+            arr.forEach((item, j) => {
+                ctx.fillStyle = colors[item || "empty"];
+                ctx.fillRect(i * cellSize, j * cellSize, cellSize, cellSize);
+            });
+        });
+    }
+
+    printGrid(colors) {
+        const {cellSize} = this.settings;
+        let ctx = this.grid.getContext("2d");
+        ctx.strokeStyle = colors.grid;
+        let w = this.grid.width - 1;
+        let h = this.grid.height - 1;
+        for (let x = 0; x <= w; x += cellSize) ctx.strokeRect(x, 0, 0.1, h);
+        for (let y = 0; y <= h; y += cellSize) ctx.strokeRect(0, y, w, 0.1);
     }
 
     setEventListeners() {
@@ -78,7 +100,7 @@ class SrartPanel {
 }
 
 function createStartPanel(colors, settings) {
-    const { width, height, cellSize } = settings;
+    const {width, height, cellSize} = settings;
     // сетка canvas
     function createGrid() {
         const cnv = document.querySelector("#grig-canvas");

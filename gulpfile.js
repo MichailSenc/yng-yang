@@ -1,4 +1,4 @@
-const { src, dest } = require("gulp");
+const {src, dest} = require("gulp");
 const gulp = require("gulp");
 const autoprefixer = require("gulp-autoprefixer"),
     browsersync = require("browser-sync").create(),
@@ -33,7 +33,7 @@ const directories = {
     },
     src: {
         html: ["./src/**/*.html", "!" + "./src/_*.html"],
-        js: ["./src/js/{index,script}.js"],
+        js: ["./src/js/index.js"],
         css: "./src/scss/style.scss",
         fonts: "./src/fonts/*.ttf",
         images: ["./src/img/**/*.{jpg,jpeg,png,svg,gif,ico,webp}"],
@@ -49,7 +49,7 @@ const directories = {
 
 function browserSync(done) {
     browsersync.init({
-        server: { baseDir: "./dist" },
+        server: {baseDir: "./dist"},
         notify: false,
         port: 3000,
     });
@@ -57,7 +57,7 @@ function browserSync(done) {
 
 function html() {
     return src(directories.src.html, {})
-        .pipe(fileinclude({ prefix: "<!--=", suffix: "-->" }))
+        .pipe(fileinclude({prefix: "<!--=", suffix: "-->"}))
         .on("error", (err) => console.error("Error!", err.message))
         .pipe(dest(directories.build.html))
         .pipe(browsersync.stream());
@@ -66,9 +66,9 @@ function html() {
 function css() {
     return src(directories.src.css, {})
         .pipe(sourcemaps.init())
-        .pipe(scss({ outputStyle: "expanded" }).on("error", scss.logError))
+        .pipe(scss({outputStyle: "expanded"}).on("error", scss.logError))
         .pipe(sourcemaps.write())
-        .pipe(rename({ extname: ".min.css" }))
+        .pipe(rename({extname: ".min.css"}))
         .pipe(dest(directories.build.css))
         .pipe(browsersync.stream());
 }
@@ -76,9 +76,9 @@ function css() {
 function js() {
     return src(directories.src.js, {})
         .pipe(sourcemaps.init())
-        .pipe(rollup({ plugins: [babel(), resolve(), commonjs()] }, "umd"))
+        .pipe(rollup({plugins: [babel(), resolve(), commonjs()]}, "umd"))
         .pipe(sourcemaps.write())
-        .pipe(rename({ suffix: ".min", extname: ".js" }))
+        .pipe(rename({suffix: ".min", extname: ".js"}))
         .pipe(dest(directories.build.js))
         .pipe(browsersync.stream());
 }
@@ -95,7 +95,7 @@ function fonts() {
 function fonts_otf() {
     return src("./src/fonts/*.otf")
         .pipe(plumber())
-        .pipe(fonter({ formats: ["ttf"] }))
+        .pipe(fonter({formats: ["ttf"]}))
         .pipe(dest("./src/fonts/"));
 }
 
@@ -154,12 +154,12 @@ function watchFiles() {
 function cssBuild() {
     return src(directories.src.css, {})
         .pipe(plumber())
-        .pipe(scss({ outputStyle: "expanded" }).on("error", scss.logError))
+        .pipe(scss({outputStyle: "expanded"}).on("error", scss.logError))
         .pipe(group_media())
-        .pipe(autoprefixer({ grid: true, overrideBrowserslist: ["last 5 versions"], cascade: true }))
+        .pipe(autoprefixer({grid: true, overrideBrowserslist: ["last 5 versions"], cascade: true}))
         .pipe(dest(directories.build.css))
         .pipe(clean_css())
-        .pipe(rename({ extname: ".min.css" }))
+        .pipe(rename({extname: ".min.css"}))
         .pipe(dest(directories.build.css))
         .pipe(browsersync.stream());
 }
@@ -169,14 +169,14 @@ function jsBuild() {
     del(directories.build.js + "vendors.min.js");
     return src(directories.src.js, {})
         .pipe(plumber())
-        .pipe(rollup({ plugins: [babel(), resolve(), commonjs()] }, "umd"))
+        .pipe(rollup({plugins: [babel(), resolve(), commonjs()]}, "umd"))
         .pipe(dest(directories.build.js))
         .pipe(uglify(/* options */))
         .on("error", (err) => {
             console.log(err.toString());
             this.emit("end");
         })
-        .pipe(rename({ extname: ".min.js" }))
+        .pipe(rename({extname: ".min.js"}))
         .pipe(dest(directories.build.js))
         .pipe(browsersync.stream());
 }
@@ -184,7 +184,7 @@ function jsBuild() {
 function htmlBuild() {
     return src(directories.src.html, {})
         .pipe(plumber())
-        .pipe(fileinclude({ prefix: "<!--=", suffix: "-->" }))
+        .pipe(fileinclude({prefix: "<!--=", suffix: "-->"}))
         .pipe(dest(directories.build.html))
         .pipe(browsersync.stream());
 }
@@ -194,7 +194,7 @@ function imagesBuild() {
         .pipe(
             imagemin({
                 progressive: true,
-                svgoPlugins: [{ removeViewBox: false }],
+                svgoPlugins: [{removeViewBox: false}],
                 interlaced: true,
                 optimizationLevel: 3, // 0 to 7
             })

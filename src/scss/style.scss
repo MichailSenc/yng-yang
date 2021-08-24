@@ -29,6 +29,7 @@ $mainColor: #000;
     border-radius: 10px;
     transition: background 0.3s ease 0s;
     box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.4);
+    text-align: center;
 
     &:hover {
         background: #2d014e;
@@ -166,13 +167,16 @@ body {
     &__container {
         display: grid;
         padding: 10px 0px 0px 20px;
-        grid-template-areas: "config" "view" "manual" "random" "buttons";
+        grid-template-areas: "config" "manual" "random" "buttons";
         @media (max-width: $md4+px) {
             line-height: 1em;
+            grid-template: 1fr 1fr 1fr / auto auto auto;
+            grid-gap: 5px;
             grid-template-areas:
-                "random random random manual manual config"
-                "random random random manual manual ."
-                "view buttons buttons buttons buttons buttons";
+                "random   manual   conig"
+                "random   manual   ."
+                "buttons  buttons  buttons";
+            // ". buttons buttons buttons buttons buttons";
             padding: 10px 10px 0px 10px;
         }
     }
@@ -181,12 +185,15 @@ body {
     &__section {
         padding: 5px 5px;
         text-align: center;
+        @media (max-width: $md4+px) {
+            padding: 0;
+        }
     }
 
     // .sidebar__section-title
     &__section-title {
         text-decoration: underline;
-        margin: 0px 0px 5px 0px;
+        margin: 0px 0px 10px 0px;
     }
 
     // .sidebar__section-content
@@ -217,10 +224,16 @@ body {
     // .sidebar__manual
     &__manual {
         grid-area: manual;
+        @media (max-width: $md4+px) {
+            justify-self: start;
+        }
     }
     // .sidebar__random
     &__random {
         grid-area: random;
+        @media (max-width: $md4+px) {
+            justify-self: start;
+        }
     }
     // .sidebar__buttons
     &__buttons {
@@ -232,6 +245,7 @@ body {
     &__section-buttons {
         display: grid;
         grid-gap: 10px 0px;
+        align-self: auto;
         grid-template-columns: 1fr;
         @media (max-width: $md4+px) {
             grid-gap: 5px;
@@ -248,6 +262,7 @@ body {
 }
 
 .input-container {
+    margin: 0px 0px 10px 0px;
     @media (max-width: $md4+px) {
         display: flex;
         align-items: center;
@@ -255,8 +270,10 @@ body {
     }
     // .input-container__label
     &__label {
-        text-align-last: left;
+        text-align: center;
+        margin: 0px 0px 5px 0px;
         @media (max-width: $md4+px) {
+            text-align-last: left;
             flex: 0 1 80%;
             font-size: 0.95em;
             margin: 0px 0.5em 0px 0px;
@@ -278,8 +295,13 @@ body {
         display: none !important;
     }
 }
+._md3-hidden {
+    @media (max-width: $md3+px) {
+        display: none !important;
+    }
+}
 
-@keyframes top {
+@keyframes top-show {
     0% {
         top: -100%;
     }
@@ -304,11 +326,13 @@ body {
     color: #ffffff;
     background: rgba($color: #000000, $alpha: 0.9);
     border-radius: 10px;
-    padding: 10px;
+    padding: 10px 35px 10px 10px;
     margin: 0px 5px;
-    opacity: 1;
-    padding-right: 30px;
-    z-index: 1000000;
+    z-index: 100;
+
+    &._active {
+        animation: top-show 0.3s ease 1 normal 0s forwards, opacity 0.7s ease 1 normal 6s forwards;
+    }
 
     @media (max-width: $md4+px) {
         font-size: 0.8em;
@@ -328,10 +352,6 @@ body {
             color: #e7b6b6;
         }
     }
-
-    &._active {
-        animation: top 0.3s ease 1 normal 0s forwards, opacity 0.7s ease 1 normal 200s forwards;
-    }
 }
 
 ._hidden {
@@ -346,7 +366,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 10000;
+    z-index: 1000;
     color: #ffffff;
     background: rgb(0, 0, 0, 0.9);
     transition: all 0.3s ease 0s;
@@ -357,7 +377,7 @@ body {
     // .settings__container
     &__container {
         margin: 0 auto;
-        padding: 0px 10px;
+        padding: 0px 20px;
         @media (min-width: $md3+px) {
             min-width: 750px;
         }
@@ -365,11 +385,12 @@ body {
     // .settings__title
     &__title {
         font-size: 1.5em;
-        margin: 2em 0px 2em 0px;
+        margin: 1em 0px 2em 0px;
         text-align: center;
     }
     // .settings__parametr
     &__parametr {
+        margin: 0px 10px 0px 0px;
         font-size: 1.1em;
         @media (max-width: $md3+px) {
             margin-bottom: 0.6em;
@@ -377,13 +398,33 @@ body {
     }
     // .settings__input
     &__input {
-        margin: 0px 0px 0px 10%;
-        width: 90%;
+        width: 100%;
         outline: none;
         max-width: none;
         @media (max-width: $md3+px) {
-            width: 100%;
             margin: 0 0 10px 0;
+        }
+
+        @media (min-width: $md3+px) {
+            &.button {
+                width: 90%;
+            }
+        }
+    }
+
+    // .settings__section-content
+    &__section-content {
+        display: flex;
+        @media (max-width: $md3+px) {
+            flex-direction: column;
+            align-items: start;
+        }
+    }
+    // .settings__check-container
+    &__check-container {
+        margin: 0px 30px 0px 0px;
+        @media (max-width: $md3+px) {
+            margin: 0px 0px 5px 0px;
         }
     }
 }
@@ -392,14 +433,16 @@ body {
     position: relative;
     justify-self: start;
     grid-gap: config;
-    z-index: 200000;
+    z-index: 1001;
     transition: all 0.3s ease 0s;
-    font-size: 2em;
+    font-size: 1.5em;
     margin: 0px 0px 0px -10px;
     @media (max-width: $md4+px) {
+        font-size: 1.8em;
         margin: 0;
         padding: 0px 0px 0px 0px;
         justify-self: end;
+        align-self: start;
     }
     &:hover {
         transform: rotate(90deg);
@@ -409,37 +452,47 @@ body {
         color: #ffffff;
     }
 }
-.color-input {
-}
 
 .row {
     display: flex;
     align-items: center;
     margin: 0px 0px 20px 0px;
 
+    // .row_reverse
+    &_reverse {
+        flex-direction: row-reverse;
+    }
+
     @media (max-width: $md3+px) {
         display: block;
         text-align: center;
         margin: 0px 0px 10px 0px;
+        max-width: 250px;
     }
 }
 
 .column20 {
+    position: relative;
     flex: 0 1 20%;
 }
 
 .column25 {
+    position: relative;
     flex: 0 1 25%;
 }
 .column30 {
+    position: relative;
     flex: 0 1 30%;
 }
 .column40 {
+    position: relative;
     flex: 0 1 40%;
 }
 .column50 {
+    position: relative;
     flex: 0 1 50%;
 }
 .column70 {
+    position: relative;
     flex: 0 1 70%;
 }

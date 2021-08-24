@@ -2,15 +2,14 @@ import EmptyPoints from "./empty-points";
 
 function pointsGeneration(startPanel, colors) {
     const canvas = startPanel.canvas;
-    let { width, height, cellSize } = startPanel.settings;
+    let {width, height, cellSize} = startPanel.settings;
+    const percentYin = document.querySelector("#yin-percent"),
+        percentYang = document.querySelector("#yang-percent"),
+        countAlive = document.querySelector("#count-alive"),
+        generButton = document.querySelector("#generate-button");
 
     /* -----------------------Рандомная генерация-------------------------------------------------*/
     function randomGeneration() {
-        const percentYin = document.querySelector("#yin-percent"),
-            percentYang = document.querySelector("#yang-percent"),
-            countAlive = document.querySelector("#count-alive"),
-            generButton = document.querySelector("#generate-button");
-
         function changePercent(param1, param2) {
             let value = +param2.value > 100 ? 100 : +param2.value < 0 ? 0 : +param2.value;
             param2.value = value;
@@ -33,6 +32,10 @@ function pointsGeneration(startPanel, colors) {
                 return;
             }
 
+            // очищаем полотно
+            startPanel.clearCanvas();
+            startPanel.setDefaultMatrix();
+
             let countYng = Math.round((+countAlive.value * +percentYin.value) / 100),
                 countYang = +countAlive.value - countYng,
                 maxSizeX = Math.floor((width - 1) / cellSize) * cellSize,
@@ -40,24 +43,20 @@ function pointsGeneration(startPanel, colors) {
 
             // Сгенерировать масив рандомно перемешанных точек на плоскости
             const emptyPoints = new EmptyPoints(maxSizeX / cellSize, maxSizeY / cellSize).shuffle();
-
-            // очищаем полотно
-            startPanel.clearCanvas();
-            startPanel.setDefaultMatrix();
-
             // ставим новые точки
             let prevCellType = startPanel.settings.cellType;
             startPanel.settings.cellType = "yng";
             for (let i = 0; i < countYng; i++) {
                 let [x, y] = emptyPoints.pop().map((item) => item * cellSize);
-                startPanel.putCoordinate({ x, y });
+                startPanel.putCoordinate({x, y});
             }
             startPanel.settings.cellType = "yang";
             for (let i = 0; i < countYang; i++) {
                 let [x, y] = emptyPoints.pop().map((item) => item * cellSize);
-                startPanel.putCoordinate({ x, y });
+                startPanel.putCoordinate({x, y});
             }
             startPanel.settings.cellType = prevCellType;
+            printCells();
         });
     }
 
@@ -86,7 +85,7 @@ function pointsGeneration(startPanel, colors) {
 
         const canvasCoordinates = document.querySelector("#current-coordinates");
         canvas.addEventListener("mousemove", (e) => {
-            let { x, y } = windowToCanvas(e.target, e.clientX, e.clientY);
+            let {x, y} = windowToCanvas(e.target, e.clientX, e.clientY);
             canvasCoordinates.innerHTML = `(x:${x / cellSize}, y:${y / cellSize})`;
             // canvasCoordinates.innerHTML = `X: ${x / cellSize}; Y: ${y / cellSize}`;
         });

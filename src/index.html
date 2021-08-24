@@ -15,20 +15,6 @@
             <aside class="sidebar">
                 <div class="sidebar__container">
                     <div class="settings-image _icon-config"></div>
-                    <div class="sidebar__section sidebar__checkboxies">
-                        <p class="sidebar__section-title">Отображение</p>
-                        <div class="sidebar__section-content">
-                            <div class="sidebar__checkbox">
-                                <input type="checkbox" id="grid-checkbox" checked data-disalbe />
-                                <label for="grid-checkbox">Сетка</label>
-                            </div>
-
-                            <div class="sidebar__checkbox">
-                                <input type="checkbox" id="canvas-checkbox" checked data-disalbe />
-                                <label for="canvas-checkbox">Полотно</label>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="sidebar__section sidebar__manual">
                         <p class="sidebar__section-title">Ручная установка</p>
@@ -52,17 +38,17 @@
                         <p class="sidebar__section-title">Рандомная генерация</p>
                         <div class="sidebar__section-content">
                             <div class="input-container">
-                                <label for="count-alive" class="input-container__label">Количество клеток</label>
+                                <p for="count-alive" class="input-container__label">Количество клеток</p>
                                 <input type="number" id="count-alive" value="20" size="10"
                                     class="input-container__input input" />
                             </div>
                             <div class="input-container">
-                                <label for="yin-percent" class="input-container__label">Процент Инь</label>
+                                <p for="yin-percent" class="input-container__label">Процент Инь</p>
                                 <input type="number" id="yin-percent" value="50" size="10"
                                     class="input-container__input input" />
                             </div>
                             <div class="input-container">
-                                <label for="yang-percent" class="input-container__label">Процент Ян</label>
+                                <p for="yang-percent" class="input-container__label">Процент Ян</p>
                                 <input type="number" id="yang-percent" value="50" size="10"
                                     class="input-container__input input" />
                             </div>
@@ -89,7 +75,6 @@
                     </div>
                     <div class="canvases" id="container">
                         <div class="canvases__data">
-                            <!-- <div class="canvases__coordinates" id="current-coordinates">Y: 0; Y: 0</div> -->
                             <div class="canvases__coordinates" id="current-coordinates">x:0, y:0</div>
                             <div class="canvases__step-count" id="step-count">Step: 0</div>
                         </div>
@@ -104,39 +89,51 @@
         <div class="settings__container">
             <div class="settings__title">Параметры</div>
             <div class="row">
-                <div class="column30 settings__parametr" id="settings-cell-size">Размер клетки в пикселях</div>
+                <div class="column30 settings__parametr _md3-hidden">Отображение</div>
                 <div class="column70">
-                    <input type="number" placeholder="4" class="settings__input input" />
+                    <div class="settings__section-content">
+                        <div class="settings__check-container">
+                            <input type="checkbox" id="grid-checkbox" checked data-disalbe />
+                            <label for="grid-checkbox">Сетка</label>
+                        </div>
+                        <div class="settings__check-container">
+                            <input type="checkbox" id="canvas-checkbox" checked data-disalbe />
+                            <label for="canvas-checkbox">Полотно</label>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row">
-                <div class="column30 settings__parametr" id="settings-yng-color">Цвет Инь</div>
+                <div class="column30 settings__parametr">Размер клетки в пикселях</div>
                 <div class="column70">
-                    <input type="color" value="#000000" class="settings__input" />
+                    <input type="number" placeholder="8" id="settings-cell-size" class="settings__input input"
+                        value="8" />
                 </div>
             </div>
             <div class="row">
-                <div class="column30 settings__parametr" id="settings-yang-color">Цвет Янь</div>
+                <div class="column30 settings__parametr">Цвет Инь</div>
                 <div class="column70">
-                    <input type="color" value="#ff0000" class="settings__input" />
+                    <input type="color" value="#000000" id="settings-yng-color" class="settings__input" />
                 </div>
             </div>
             <div class="row">
-                <div class="column30 settings__parametr" id="settings-grid-color">Цвет сетки на полотне</div>
+                <div class="column30 settings__parametr">Цвет Янь</div>
                 <div class="column70">
-                    <input type="color" value="#b3b3b3" class="settings__input" />
+                    <input type="color" value="#ff0000" id="settings-yang-color" class="settings__input" />
                 </div>
             </div>
             <div class="row">
-                <div class="column40"></div>
+                <div class="column30 settings__parametr">Цвет сетки на полотне</div>
+                <div class="column70">
+                    <input type="color" value="#b3b3b3" id="settings-grid-color" class="settings__input" />
+                </div>
+            </div>
+            <div class="row row_reverse">
                 <div class="column20">
-                    <button class="settings__input button">По умолчанию</button>
+                    <div class="settings__input button" id="settings-def-btn">По умолчанию</div>
                 </div>
                 <div class="column20">
-                    <button class="settings__input button">Применить</button>
-                </div>
-                <div class="column20">
-                    <button class="settings__input button">Отмена</button>
+                    <div class="settings__input button" id="settings-apply-btn">Применить</div>
                 </div>
             </div>
         </div>
@@ -144,6 +141,5 @@
     <!-- <canvas></canvas> -->
 </body>
 <script src="./js/index.min.js"></script>
-<script src="./js/script.min.js"></script>
 
 </html>

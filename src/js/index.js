@@ -1,32 +1,13 @@
+import "./script";
 import pointsGeneration from "./modules/points-generation";
-import SrartPanel from "./modules/canvas";
+import SrartPanel from "./modules/startPanel";
 import startGame from "./modules/start-game";
-import { getDataFromLocalStorage, postDataToLocalStorage } from "./modules/local-storage";
-
-const getData = async () => {
-    try {
-        const response = await fetch("../data/settings.json", {
-            method: "GET",
-            credentials: "same-origin",
-        });
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error(error);
-    }
-};
+import * as localData from "./modules/local-storage";
 
 document.addEventListener("DOMContentLoaded", () => {
-    // let settingsJSON = await
-    // getData().then((json) => {
-    //     console.log(json);
-    //     settingsJSON = json;
-    // });
-    const settingsJSON = getData();
-    console.log(settingsJSON);
     /* -------------------------------НАСТРОЙКИ---------------------------------------------------------------------- */
     const container = document.querySelector("#container");
-    const cell = 4;
+    const {cell, empty, yng, yang, grid} = localData.getSettingsData();
     const settings = {
         cellSize: cell,
         width: Math.floor(container.clientWidth / cell) * cell + 1,
@@ -34,10 +15,29 @@ document.addEventListener("DOMContentLoaded", () => {
         cellType: "empty",
     };
 
-    const colors = { empty: "#FFFFFF", yng: "#000000", yang: "#FF0000", grid: "rgb(0,0,0,0.3)" };
+    const colors = {empty, yng, yang, grid};
 
-    getDataFromLocalStorage();
-    postDataToLocalStorage();
+    localData.getDataFromLocalStorage();
+    localData.postDataToLocalStorage();
+
+    ["#settings-yng-color", "#settings-yang-color", "#settings-grid-color"].forEach((selector, i) => {
+        document.querySelector(selector).addEventListener("change", (e) => {
+            switch (i) {
+                case 0:
+                    colors.yng = e.target.value;
+                    startPanel.printCoordinates(colors);
+                    break;
+                case 1:
+                    colors.yang = e.target.value;
+                    break;
+                case 2:
+                    colors.grid = e.target.value;
+                    break;
+            }
+            startPanel.printGrid(colors);
+            startPanel.printCoordinates(colors);
+        });
+    });
 
     /* -------------------------------ОТРИСОВКА_ПОЛОТНА-------------------------------------------------------------- */
     const startPanel = new SrartPanel(colors, settings);
